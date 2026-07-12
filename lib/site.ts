@@ -1,5 +1,5 @@
 /** Cloudflare Worker that proxies Gemini for all visitors ("" disables). */
-export const ASK_PROXY_URL = "";
+export const ASK_PROXY_URL = "https://ask-siddartha.siddarthadarisi.workers.dev";
 
 export const site = {
   name: "Siddartha Darisi",
