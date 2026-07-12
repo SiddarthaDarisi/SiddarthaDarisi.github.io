@@ -1,11 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getArtifact } from "@/lib/artifacts";
+import { artifacts, getArtifact } from "@/lib/artifacts";
 import { IconExternal } from "@/components/Icons";
 
 export function generateStaticParams() {
-  return [{ slug: "ai-ml-timeline" }, { slug: "ai-lab-chatbot" }];
+  return artifacts.map((artifact) => ({ slug: artifact.slug }));
 }
 
 type PageProps = {
@@ -88,29 +88,33 @@ export default async function ArtifactDetailPage({ params }: PageProps) {
       </header>
 
       {/* LIVE EMBED */}
-      <section data-reveal className="mt-10">
-        {artifact.externalUrl && (
-          <div className="mb-4 flex justify-end">
-            <a
-              href={artifact.externalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-            >
-              Open full experience
-              <IconExternal size={16} />
-            </a>
-          </div>
-        )}
-        <iframe
-          src={artifact.embed.src}
-          title={artifact.embed.title}
-          style={{ minHeight: artifact.embed.minHeight }}
-          className="w-full rounded-2xl border border-line bg-surface shadow-[var(--glow)]"
-          allow="microphone"
-          loading="lazy"
-        />
-      </section>
+      {(artifact.embed || artifact.externalUrl) && (
+        <section data-reveal className="mt-10">
+          {artifact.externalUrl && (
+            <div className="mb-4 flex justify-end">
+              <a
+                href={artifact.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                Open full experience
+                <IconExternal size={16} />
+              </a>
+            </div>
+          )}
+          {artifact.embed && (
+            <iframe
+              src={artifact.embed.src}
+              title={artifact.embed.title}
+              style={{ minHeight: artifact.embed.minHeight }}
+              className="w-full rounded-2xl border border-line bg-surface shadow-[var(--glow)]"
+              allow="microphone"
+              loading="lazy"
+            />
+          )}
+        </section>
+      )}
 
       <Section number="01" heading="Introduction">
         <p>{artifact.introduction}</p>

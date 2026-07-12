@@ -72,11 +72,11 @@ const artifacts = [
   {
     number: "02",
     kind: "chatbot" as const,
-    title: "Ask Siddartha — Custom AI Chatbot",
+    title: "Triage Copilot — On-Call AI Assistant",
     description:
-      "A custom-trained AI assistant built in the AI Lab, deployed live across this site. Interrogate my background in real time — it answers 24/7.",
-    href: "/artifacts/ai-lab-chatbot",
-    tags: ["Generative AI", "Chatbase", "Prompt Design"],
+      "An AI agent built in the AI Lab that walks an engineer through a production alert at 3am — grounded in curated on-call docs for Redshift, Lambda, and CloudWatch. Live demo on its page.",
+    href: "/artifacts/triage-copilot",
+    tags: ["AI Agent", "Generative AI", "AWS Ops"],
   },
 ];
 

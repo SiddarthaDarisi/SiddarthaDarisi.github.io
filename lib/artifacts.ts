@@ -22,7 +22,8 @@ export interface Artifact {
   uniqueValue: string;
   relevance: string;
   references: ArtifactReference[];
-  embed: ArtifactEmbed;
+  /** External iframe embed; omitted when the artifact renders as a live in-page component. */
+  embed?: ArtifactEmbed;
   externalUrl?: string;
 }
 
@@ -88,43 +89,51 @@ export const artifacts: Artifact[] = [
     externalUrl: "https://siddarthadarisi.github.io/climate-of-machine-intelligence/",
   },
   {
-    slug: "ai-lab-chatbot",
-    title: "Ask Siddartha — Custom AI Chatbot",
+    slug: "triage-copilot",
+    title: "Triage Copilot — On-Call AI Assistant",
     subtitle:
-      "A custom-trained AI assistant built in the AI Lab and deployed live across this portfolio",
-    tags: ["Generative AI", "Chatbase", "Prompt Design", "LLM"],
+      "An AI agent built in the AI Lab that walks an engineer through a production alert at 3am — grounded in curated on-call documentation, running live below",
+    tags: ["AI Agent", "Generative AI", "AWS Operations", "Knowledge Grounding"],
     introduction:
-      "A working generative-AI chatbot built during the AI Lab activity: a custom assistant trained on Siddartha's professional background that visitors can converse with, embedded below and available site-wide as the floating chat bubble in the corner of every page.",
+      "Triage Copilot is a working AI agent for on-call engineers, built during the AI Lab activity. Describe a production alert — \"Redshift disk at 92%\", \"Lambda throwing 429s\", a CloudWatch alarm storm — and it answers from curated on-call documentation: what is likely happening, what to check first, and how to mitigate, the exact workflow of a 3am page. It is embedded live below: try it.",
     description:
-      "The assistant is built on Chatbase, an LLM chatbot platform. It was configured with a custom knowledge base covering Siddartha's experience, skills, projects, and this portfolio, plus behavioral instructions that keep answers professional, grounded, and on-topic. Rather than describing the AI Lab experience, this artifact IS the product of it — a live system the audience can interrogate directly.",
+      "The agent is a single-purpose assistant grounded in a custom knowledge base of on-call documentation for the AWS services I operate — Amazon Redshift, AWS Lambda, and CloudWatch — covering symptoms, first checks, diagnosis paths, mitigations, and escalation criteria. Built on Chatbase's LLM agent platform, it combines that document grounding with behavioral instructions that keep it in role: direct, structured answers for an engineer under incident pressure, and honesty when a question falls outside its runbook coverage. It is deliberately not a general chatbot — a one-purpose agent grounded in domain documents is what makes it dependable enough to be useful during a real page.",
     objective:
-      "To take the AI Lab from experiment to product: apply hands-on lessons about LLM behavior, knowledge grounding, and prompt design to ship a chatbot that both demonstrates generative-AI skills and serves a real function — answering recruiters' and collaborators' questions about Siddartha on demand, 24/7.",
+      "To take the AI Lab from experiment to product: apply hands-on lessons about LLM behavior, knowledge grounding, and instruction design to ship an agent that solves a real problem from my own job — guiding on-call triage — rather than a demo chatbot, and to publish it where the audience can test it directly.",
     process: [
-      "Explored LLM capabilities and limitations in the AI Lab.",
-      "Selected Chatbase as the platform.",
-      "Curated and structured the knowledge base (professional background, projects, resume content).",
-      "Wrote system instructions and tuned tone/guardrails.",
-      "Tested with adversarial and edge-case questions and refined responses.",
-      "Embedded via iframe on this page and as a site-wide widget script.",
+      "Chose a real problem from my own domain: on-call triage for the AWS services I operate (Redshift, Lambda, CloudWatch).",
+      "Curated and structured the on-call documentation that became the agent's knowledge base — symptoms, immediate checks with commands, diagnosis steps, mitigations, and escalation criteria.",
+      "Configured the agent on Chatbase and uploaded the documentation as grounding sources.",
+      "Wrote behavioral instructions defining the persona (calm, direct, incident-focused), the answer structure, and guardrails to stay within the runbook scope.",
+      "Tested with realistic alert phrasings and error strings an engineer would paste at 3am, then refined the docs and instructions where answers were weak.",
+      "Embedded the live agent on this page so recruiters and engineers can interrogate it directly.",
     ],
     tools: [
-      "Chatbase (LLM chatbot platform)",
-      "GPT-family large language model",
-      "Prompt engineering & system instructions",
-      "Custom knowledge-base curation",
-      "HTML iframe / JavaScript embed",
+      "Chatbase (LLM agent platform)",
+      "Large language model with document grounding (RAG)",
+      "Knowledge-base curation (AWS on-call runbook content)",
+      "Prompt engineering & behavioral instructions",
+      "AWS domain expertise (Redshift, Lambda, CloudWatch)",
+      "HTML iframe embed",
     ],
     uniqueValue:
-      "Most portfolio descriptions of AI coursework are static write-ups; this one is a functioning AI product the audience can test in real time. It demonstrates practical GenAI skills — grounding, instruction design, evaluation — and the product sense to deploy them somewhere genuinely useful.",
+      "Most AI-lab artifacts are throwaway chats with a model; this is a scoped, grounded agent that solves a problem from my actual job. It demonstrates the judgment that makes GenAI useful in production: constraining an LLM to curated domain documents, designing its behavior for a high-stakes user (an engineer mid-incident), and knowing that a dependable one-purpose agent beats an unreliable general one.",
     relevance:
-      "For recruiters and hiring managers it offers an interactive way to learn about Siddartha's background while simultaneously proving hands-on generative-AI capability, which is exactly the skill set his target roles demand.",
+      "My work at Amazon is building RAG ingestion infrastructure — the machinery that grounds enterprise AI in documents. Triage Copilot is that same discipline exercised end-to-end at product scale: for hiring managers it proves applied GenAI skills plus operational AWS depth; for on-call engineers it is a genuinely reusable triage aid.",
     references: [
       { label: "Chatbase documentation", url: "https://www.chatbase.co" },
-      { label: "OpenAI model documentation" },
+      {
+        label: 'Lewis et al. (2020), "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"',
+        url: "https://arxiv.org/abs/2005.11401",
+      },
+      {
+        label: "AWS documentation (Amazon Redshift, AWS Lambda, Amazon CloudWatch)",
+        url: "https://docs.aws.amazon.com",
+      },
     ],
     embed: {
       src: "https://www.chatbase.co/chatbot-iframe/r8okjfK0T_xEGU7L7X4w9",
-      title: "Ask Siddartha — custom AI chatbot",
+      title: "Triage Copilot — on-call AI assistant",
       minHeight: 700,
     },
   },
