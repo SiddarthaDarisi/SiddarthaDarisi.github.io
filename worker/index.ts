@@ -90,7 +90,13 @@ export default {
               ],
             },
           ],
-          generationConfig: { temperature: 0.2, maxOutputTokens: 800 },
+          generationConfig: {
+            temperature: 0.2,
+            maxOutputTokens: 600,
+            // Disable model "thinking" — unneeded for grounded RAG, and it was
+            // consuming the output budget and truncating answers mid-sentence.
+            thinkingConfig: { thinkingBudget: 0 },
+          },
         }),
       }
     );

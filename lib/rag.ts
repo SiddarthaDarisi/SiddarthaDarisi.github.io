@@ -167,7 +167,11 @@ export async function geminiAnswer(
             ],
           },
         ],
-        generationConfig: { temperature: 0.2, maxOutputTokens: 800 },
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens: 600,
+          thinkingConfig: { thinkingBudget: 0 },
+        },
       }),
     }
   );

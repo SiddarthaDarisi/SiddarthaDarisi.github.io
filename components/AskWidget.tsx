@@ -87,55 +87,86 @@ export default function AskWidget() {
     setInput("");
     setMessages((m) => [...m, { kind: "user", text: q }]);
 
-    // Below this BM25 score the match is too weak to trust — pivot to contact.
-    const CONFIDENCE = 2.2;
-    const hits = index.search(q, 3).filter((h) => h.score >= CONFIDENCE);
-    if (hits.length === 0) {
-      const text = FALLBACKS[fallbackIdx.current % FALLBACKS.length];
-      fallbackIdx.current += 1;
-      setMessages((m) => [
-        ...m,
-        { kind: "bot", text, cta: "Contact Siddartha" },
-      ]);
-      return;
-    }
-
-    const top = profileKB.find((c) => c.id === hits[0].id)!;
     const key = getGeminiKey();
-    const wantsHire = HIRE_INTENT.test(q) || top.id === "kb-contact";
-    const cta = wantsHire ? "Hire Me — get in touch" : undefined;
+    const llm = Boolean(key) || Boolean(ASK_PROXY_URL);
+    const hireCta = "Hire Me — get in touch";
+    const contactCta = "Contact Siddartha";
+    const wantsHire = HIRE_INTENT.test(q);
 
-    if (!key && !ASK_PROXY_URL) {
+    // ---------- Retrieval-only mode (no LLM available) ----------
+    // Gate on a confidence threshold; pivot to contact when nothing matches.
+    if (!llm) {
+      const CONFIDENCE = 2.2;
+      const hits = index.search(q, 3).filter((h) => h.score >= CONFIDENCE);
+      if (hits.length === 0) {
+        const text = FALLBACKS[fallbackIdx.current % FALLBACKS.length];
+        fallbackIdx.current += 1;
+        setMessages((m) => [...m, { kind: "bot", text, cta: contactCta }]);
+        return;
+      }
+      const top = profileKB.find((c) => c.id === hits[0].id)!;
       setMessages((m) => [
         ...m,
-        { kind: "bot", text: top.text, link: top.link, topic: top.topic, cta },
+        {
+          kind: "bot",
+          text: top.text,
+          link: top.link,
+          topic: top.topic,
+          cta: wantsHire || top.id === "kb-contact" ? hireCta : undefined,
+        },
       ]);
       return;
     }
+
+    // ---------- LLM mode (proxy or visitor key) ----------
+    // No hard threshold: the model reasons over the top matches, so typos and
+    // vaguely-phrased questions still get a real answer. If nothing matches at
+    // all, anchor on the identity chunks so "who is he" always resolves.
+    const hits = index.search(q, 5);
+    const contextChunks = hits.length
+      ? hits.map((h) => profileKB.find((c) => c.id === h.id)!)
+      : profileKB.filter(
+          (c) =>
+            c.id === "kb-value-proposition" || c.id === "kb-summary-current-focus"
+        );
+    const topHit = hits.length ? profileKB.find((c) => c.id === hits[0].id) : undefined;
 
     setBusy(true);
     try {
-      const context = hits
-        .map((h) => {
-          const c = profileKB.find((x) => x.id === h.id)!;
-          return `[${c.id}] ${c.topic}: ${c.text}`;
-        })
+      const context = contextChunks
+        .map((c) => `[${c.id}] ${c.topic}: ${c.text}`)
         .join("\n");
       const system =
-        "You are the portfolio assistant for Siddartha Darisi, a software engineer, speaking mostly with recruiters. Answer in 2-3 friendly, professional sentences using ONLY the provided context. NEVER say Siddartha lacks or doesn't have a skill or experience — if the context doesn't show direct experience with something, highlight the closest adjacent experience from the context, note that his record (GenAI MLOps to Amazon-scale RAG in under two years) shows he ramps up on new technologies fast, and warmly suggest discussing specifics via the contact page.";
+        "You are the portfolio assistant for Siddartha Darisi, a software engineer, speaking mostly with recruiters. Answer in 2-3 concise, professional sentences using ONLY the provided context; never invent facts, numbers, or skills. If the context fully answers the question, answer it plainly and do NOT tack on any \"reach out\" or contact call-to-action. Only when the context does not actually contain the answer: instead of saying he lacks the skill, point to his closest relevant experience, note that he ramps up on new technologies fast (from GenAI MLOps to Amazon-scale RAG in under two years), and invite the recruiter to reach out via his contact page. Never overstate — if the context does not show he has done something, do not imply he is an expert at it.";
       // Visitor's own key wins; otherwise the site's Worker proxy.
       const text = key
         ? await geminiAnswer(key, system, context, q)
         : await proxyAnswer(ASK_PROXY_URL, system, context, q);
+      // Show a contact button on hiring questions or when the reply invites it.
+      const invitesContact = /contact page|reach out|get in touch|contact him/i.test(text);
+      const cta = wantsHire ? hireCta : invitesContact ? contactCta : undefined;
       setMessages((m) => [
         ...m,
-        { kind: "bot", text, link: top.link, topic: top.topic, viaLlm: true, cta },
+        { kind: "bot", text, link: topHit?.link, topic: topHit?.topic, viaLlm: true, cta },
       ]);
     } catch {
-      setMessages((m) => [
-        ...m,
-        { kind: "bot", text: top.text, link: top.link, topic: top.topic, cta },
-      ]);
+      // Proxy/model unavailable — fall back to the best retrieved chunk, or contact.
+      if (topHit) {
+        setMessages((m) => [
+          ...m,
+          {
+            kind: "bot",
+            text: topHit.text,
+            link: topHit.link,
+            topic: topHit.topic,
+            cta: wantsHire || topHit.id === "kb-contact" ? hireCta : undefined,
+          },
+        ]);
+      } else {
+        const text = FALLBACKS[fallbackIdx.current % FALLBACKS.length];
+        fallbackIdx.current += 1;
+        setMessages((m) => [...m, { kind: "bot", text, cta: contactCta }]);
+      }
     } finally {
       setBusy(false);
     }
