@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import ScrollFx from "@/components/ScrollFx";
+import ScrollProgress from "@/components/ScrollProgress";
+import BackToTop from "@/components/BackToTop";
+import PageGlow from "@/components/PageGlow";
 import { site } from "@/lib/site";
 
 const geistSans = Geist({
@@ -14,6 +18,12 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -33,6 +43,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Light is the default; a stored toggle choice wins. Runs before paint.
+const themeInit = `try{var t=localStorage.getItem("theme");if(t!=="dark"&&t!=="light")t="light";document.documentElement.setAttribute("data-theme",t)}catch(e){document.documentElement.setAttribute("data-theme","light")}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -41,12 +54,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+      </head>
       <body className="min-h-full flex flex-col">
+        <PageGlow />
+        <ScrollProgress />
+        <ScrollFx />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
+        <BackToTop />
         <Script id="chatbase-widget" strategy="afterInteractive">
           {`(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="r8okjfK0T_xEGU7L7X4w9";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();`}
         </Script>

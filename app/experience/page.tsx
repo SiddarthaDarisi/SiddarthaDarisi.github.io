@@ -1,4 +1,12 @@
 import Link from "next/link";
+import {
+  IconBriefcase,
+  IconGradCap,
+  IconGear,
+  IconSparkle,
+  IconArrowRight,
+  IconCheck,
+} from "@/components/Icons";
 
 export const metadata = {
   title: "Experience",
@@ -10,6 +18,7 @@ type Role = {
   location: string;
   dates: string;
   bullets: string[];
+  chips: string[];
 };
 
 const roles: Role[] = [
@@ -24,6 +33,7 @@ const roles: Role[] = [
       "Collaborated with cross-functional product and science teams to standardize ingestion for 10+ enterprise formats, improving cross-service compatibility and onboarding.",
       "Streamlined index ingestion by integrating validation and safe rollout mechanisms into CI/CD workflows for ML teams — **60%** faster deployments.",
     ],
+    chips: ["RAG", "AWS", "CI/CD", "LLM Integration"],
   },
   {
     company: "People Tech Group",
@@ -36,6 +46,7 @@ const roles: Role[] = [
       "Implemented automated scaling policies from cloud-usage analysis, cutting infrastructure costs **15%**.",
       "Designed traffic-splitting algorithms that cut microservice latency by **40ms** for real-time AI inference.",
     ],
+    chips: ["GenAI", "IaC", "MLOps", "AWS"],
   },
 ];
 
@@ -43,14 +54,17 @@ const education = [
   {
     school: "New Jersey Institute of Technology",
     program: "MS, Cyber Security & Privacy",
+    inProgress: false,
   },
   {
     school: "Koneru Lakshmaiah Education Foundation",
     program: "B.Tech, Computer Science & Engineering",
+    inProgress: false,
   },
   {
     school: "Indiana Wesleyan University",
     program: "Graduate studies, AI & Machine Learning (in progress)",
+    inProgress: true,
   },
 ];
 
@@ -102,7 +116,7 @@ function renderBullet(bullet: string, key: number) {
       <span>
         {parts.map((part, i) =>
           part.startsWith("**") && part.endsWith("**") ? (
-            <span key={i} className="font-semibold text-accent-strong">
+            <span key={i} className="font-semibold text-gold">
               {part.slice(2, -2)}
             </span>
           ) : (
@@ -118,9 +132,10 @@ export default function ExperiencePage() {
   return (
     <>
       {/* HEADER */}
-      <section className="mx-auto max-w-6xl px-5 py-20">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-          Experience
+      <section className="mx-auto max-w-6xl px-5 py-16 md:py-20" data-reveal>
+        <p className="eyebrow">// Experience</p>
+        <h1 className="font-display mt-4 text-5xl font-bold tracking-tight text-foreground md:text-6xl">
+          Career <span className="text-gradient">Experience</span>
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">
           Software Development Engineer specializing in cloud architecture
@@ -129,89 +144,113 @@ export default function ExperiencePage() {
       </section>
 
       {/* WORK EXPERIENCE */}
-      <section className="mx-auto max-w-6xl px-5 pb-20">
-        <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/icon-briefcase.svg" alt="" width={40} height={40} />
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Work Experience
-          </h2>
+      <section className="mx-auto max-w-6xl px-5 py-16 md:py-20">
+        <div className="flex items-center gap-4" data-reveal>
+          <span className="icon-badge">
+            <IconBriefcase />
+          </span>
+          <div>
+            <p className="eyebrow">// 01 &middot; Work Experience</p>
+            <h2 className="font-display mt-1 text-3xl font-bold tracking-tight text-foreground">
+              Work Experience
+            </h2>
+          </div>
         </div>
 
-        <div className="mt-10 space-y-10 border-l border-line pl-8 md:pl-10">
-          {roles.map((role) => (
-            <div key={role.company} className="relative">
-              <span className="absolute top-1.5 -left-[calc(2rem+5px)] h-2.5 w-2.5 rounded-full bg-accent md:-left-[calc(2.5rem+5px)]" />
-              <div className="rounded-xl border border-line bg-surface p-7">
-                <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground">
-                      {role.title}
-                    </h3>
-                    <p className="mt-0.5 text-base font-medium text-accent">
-                      {role.company} &middot; {role.location}
-                    </p>
-                  </div>
-                  <p className="text-sm font-medium text-muted">
-                    {role.dates}
-                  </p>
+        <div className="relative mt-10">
+          <div
+            aria-hidden="true"
+            className="absolute left-0 top-2 bottom-2 hidden w-px md:block"
+            style={{
+              background: "linear-gradient(180deg, var(--teal), var(--violet))",
+            }}
+          />
+          <div className="dim-list space-y-4 md:pl-8">
+            {roles.map((role) => (
+              <div
+                key={role.company}
+                data-reveal
+                className="card grid gap-4 p-6 md:grid-cols-[140px_1fr] md:gap-6 md:p-7"
+              >
+                <div className="font-mono text-xs uppercase tracking-wider text-muted">
+                  {role.dates}
                 </div>
-                <ul className="mt-5 space-y-3">
-                  {role.bullets.map((bullet, i) => renderBullet(bullet, i))}
-                </ul>
+                <div>
+                  <h3 className="font-display text-xl font-semibold text-foreground">
+                    {role.title}
+                  </h3>
+                  <p className="mt-0.5 text-sm font-medium text-accent">
+                    {role.company} &middot; {role.location}
+                  </p>
+                  <ul className="mt-5 space-y-3">
+                    {role.bullets.map((bullet, i) => renderBullet(bullet, i))}
+                  </ul>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {role.chips.map((chip) => (
+                      <span key={chip} className="chip">
+                        {chip}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* EDUCATION */}
-      <section className="mx-auto max-w-6xl px-5 pb-20">
-        <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/icon-gradcap.svg" alt="" width={40} height={40} />
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Education
-          </h2>
+      <section className="mx-auto max-w-6xl px-5 py-16 md:py-20">
+        <div className="flex items-center gap-4" data-reveal>
+          <span className="icon-badge">
+            <IconGradCap />
+          </span>
+          <div>
+            <p className="eyebrow">// 02 &middot; Education</p>
+            <h2 className="font-display mt-1 text-3xl font-bold tracking-tight text-foreground">
+              Education
+            </h2>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {education.map((item) => (
-            <div
-              key={item.school}
-              className="rounded-xl border border-line bg-surface p-6"
-            >
-              <h3 className="text-lg font-semibold text-foreground">
+            <div key={item.school} data-reveal className="card card-lift p-6">
+              <h3 className="font-display text-lg font-semibold text-foreground">
                 {item.school}
               </h3>
               <p className="mt-2 text-base text-muted">{item.program}</p>
+              {item.inProgress && (
+                <span className="chip mt-4 inline-flex">In Progress</span>
+              )}
             </div>
           ))}
         </div>
       </section>
 
       {/* SKILLS */}
-      <section className="mx-auto max-w-6xl px-5 pb-20">
-        <div className="flex items-center gap-3">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/icon-gear.svg" alt="" width={40} height={40} />
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Skills
-          </h2>
+      <section className="mx-auto max-w-6xl px-5 py-16 md:py-20">
+        <div className="flex items-center gap-4" data-reveal>
+          <span className="icon-badge">
+            <IconGear />
+          </span>
+          <div>
+            <p className="eyebrow">// 03 &middot; Skills</p>
+            <h2 className="font-display mt-1 text-3xl font-bold tracking-tight text-foreground">
+              Skills
+            </h2>
+          </div>
         </div>
 
-        <div className="mt-8 space-y-8">
+        <div className="mt-8 space-y-8" data-reveal>
           {skillGroups.map((group) => (
             <div key={group.label}>
-              <h3 className="text-sm font-semibold uppercase tracking-widest text-muted">
+              <h3 className="font-mono text-xs font-semibold uppercase tracking-widest text-muted">
                 {group.label}
               </h3>
               <div className="mt-4 flex flex-wrap gap-2.5">
                 {group.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="rounded-md border border-line bg-raised px-3.5 py-1.5 text-sm font-medium text-foreground"
-                  >
+                  <span key={skill} className="chip">
                     {skill}
                   </span>
                 ))}
@@ -222,31 +261,24 @@ export default function ExperiencePage() {
       </section>
 
       {/* CERTIFICATIONS */}
-      <section className="mx-auto max-w-6xl px-5 pb-20">
-        <h2 className="text-3xl font-bold tracking-tight text-foreground">
-          Certifications
-        </h2>
+      <section className="mx-auto max-w-6xl px-5 py-16 md:py-20">
+        <div data-reveal>
+          <p className="eyebrow">// 04 &middot; Certifications</p>
+          <h2 className="font-display mt-1 text-3xl font-bold tracking-tight text-foreground">
+            Certifications
+          </h2>
+        </div>
         <div className="mt-8 grid gap-6 sm:grid-cols-2">
           {certifications.map((cert) => (
             <div
               key={cert}
-              className="flex items-center gap-4 rounded-xl border border-line bg-surface p-6"
+              data-reveal
+              className="card card-lift flex items-center gap-4 p-6"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent-strong">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-5 w-5"
-                >
-                  <path d="M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.1-1.01L12 2z" />
-                </svg>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gold text-gold">
+                <IconCheck size={18} />
               </span>
-              <p className="text-base font-semibold text-foreground">
+              <p className="font-display text-base font-semibold text-foreground">
                 {cert}
               </p>
             </div>
@@ -255,19 +287,27 @@ export default function ExperiencePage() {
       </section>
 
       {/* PROJECT HIGHLIGHT */}
-      <section className="mx-auto max-w-6xl px-5 pb-20">
-        <h2 className="text-3xl font-bold tracking-tight text-foreground">
-          Project Highlight
-        </h2>
-        <div className="mt-8 rounded-xl border border-line border-l-4 border-l-accent bg-surface p-7 md:p-8">
-          <h3 className="text-xl font-semibold text-foreground">
+      <section className="mx-auto max-w-6xl px-5 py-16 md:py-20">
+        <div className="card relative overflow-hidden p-8" data-reveal>
+          <div
+            aria-hidden="true"
+            className="absolute -top-20 -right-20 h-56 w-56 rounded-full opacity-20"
+            style={{
+              background: "radial-gradient(circle, var(--teal), transparent)",
+            }}
+          />
+          <p className="eyebrow relative flex items-center gap-2">
+            <IconSparkle size={16} />
+            // Project Highlight
+          </p>
+          <h3 className="font-display relative mt-3 text-xl font-semibold text-foreground">
             Drowsiness Detection AI
           </h3>
-          <p className="mt-3 max-w-3xl text-base leading-relaxed text-muted">
+          <p className="relative mt-3 max-w-3xl text-base leading-relaxed text-muted">
             Real-time CNN pipeline (PyTorch) with automated model-reliability
             monitoring — achieving{" "}
-            <span className="font-semibold text-accent-strong">95%</span>{" "}
-            accuracy in production with edge-case drift detection.
+            <span className="font-semibold text-gold">95%</span> accuracy in
+            production with edge-case drift detection.
           </p>
         </div>
       </section>
@@ -275,16 +315,11 @@ export default function ExperiencePage() {
       {/* BOTTOM CTA */}
       <section className="border-t border-line bg-surface">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-5 py-16 text-center md:flex-row md:justify-between md:text-left">
-          <Link
-            href="/artifacts"
-            className="text-base font-semibold text-accent hover:text-accent-strong"
-          >
-            View my portfolio artifacts →
+          <Link href="/artifacts" className="btn-ghost">
+            View my portfolio artifacts
+            <IconArrowRight size={16} />
           </Link>
-          <Link
-            href="/contact"
-            className="rounded-md bg-accent px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-accent-strong"
-          >
+          <Link href="/contact" className="btn-primary">
             Contact me
           </Link>
         </div>

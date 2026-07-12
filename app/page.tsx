@@ -1,19 +1,80 @@
-import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/lib/site";
+import NeuralHero from "@/components/NeuralHero";
+import Counter from "@/components/Counter";
+import SectionSpy from "@/components/SectionSpy";
+import ArtifactThumb from "@/components/ArtifactThumb";
+import {
+  IconGitHub,
+  IconLinkedIn,
+  IconEnvelope,
+  IconSparkle,
+  IconArrowRight,
+} from "@/components/Icons";
+
+const roles = [
+  "RAG infrastructure",
+  "MLOps automation",
+  "cloud architecture",
+  "RAG infrastructure",
+];
+
+const sections = [
+  { id: "about", label: "About" },
+  { id: "value", label: "Value" },
+  { id: "experience", label: "Experience" },
+  { id: "artifacts", label: "Artifacts" },
+  { id: "contact", label: "Contact" },
+];
+
+const stats = [
+  { value: 10, suffix: "k+", label: "documents ingested daily" },
+  { value: 60, suffix: "%", label: "faster ML deployments" },
+  { value: 35, suffix: "%", label: "shorter release cycles" },
+  { value: 2, suffix: "×", label: "AWS certified" },
+];
+
+const techs = [
+  "AWS", "Amazon Bedrock", "Python", "Java · Spring Boot", "TypeScript",
+  "PyTorch", "TensorFlow", "Kubernetes", "Docker", "Terraform",
+  "React", "Node.js", "CI/CD", "RAG Systems", "MLOps",
+];
+
+const experiencePreview = [
+  {
+    range: "2024 — Present",
+    role: "Software Development Engineer",
+    company: "Amazon · Seattle",
+    summary:
+      "AWS Quick RAG team — high-throughput ingestion for Quick Suite, Q Business, and Kendra: 10k+ docs/day, zero-downtime re-ingestion, 60% faster ML deployments.",
+    tags: ["RAG", "AWS", "LLM Integration", "CI/CD"],
+  },
+  {
+    range: "Apr — Oct 2024",
+    role: "Cloud Engineer",
+    company: "People Tech Group · Seattle",
+    summary:
+      "GenAI-driven MLOps turning natural-language prompts into validated IaC (35% faster releases); AI document pipeline for HCA Healthcare cutting manual entry 80%+.",
+    tags: ["GenAI", "IaC", "MLOps", "Healthcare AI"],
+  },
+];
 
 const artifacts = [
   {
+    number: "01",
+    kind: "timeline" as const,
     title: "The Climate of Machine Intelligence",
     description:
-      "Interactive AI/ML history timeline (1943–2025) charting booms, winters, and thaws with 40 milestones and a training-compute visualization.",
+      "Interactive AI/ML history timeline (1943–2025) charting booms, winters, and thaws — 40 milestones, era barometer, and a log-scale training-compute visualization.",
     href: "/artifacts/ai-ml-timeline",
-    tags: ["Research", "Data Visualization", "TypeScript"],
+    tags: ["Research", "Data Viz", "TypeScript"],
   },
   {
+    number: "02",
+    kind: "chatbot" as const,
     title: "Ask Siddartha — Custom AI Chatbot",
     description:
-      "A custom-trained AI assistant built in the AI Lab, embedded live on this site.",
+      "A custom-trained AI assistant built in the AI Lab, deployed live across this site. Interrogate my background in real time — it answers 24/7.",
     href: "/artifacts/ai-lab-chatbot",
     tags: ["Generative AI", "Chatbase", "Prompt Design"],
   },
@@ -22,187 +83,294 @@ const artifacts = [
 export default function Home() {
   return (
     <>
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/brand/hero-banner.svg"
-            alt=""
-            fill
-            priority
-            className="object-cover"
-          />
+      <div className="mx-auto grid max-w-6xl gap-14 px-5 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10">
+        {/* ============ LEFT · STICKY IDENTITY ============ */}
+        <header className="relative pt-16 lg:sticky lg:top-14 lg:flex lg:h-[calc(100vh-3.5rem)] lg:flex-col lg:pt-20">
           <div
-            className="absolute inset-0"
-            style={{ background: "var(--hero-overlay)" }}
-          />
-        </div>
+            aria-hidden
+            className="pointer-events-none absolute -left-24 top-8 -z-10 hidden h-[420px] w-[420px] opacity-[0.16] lg:block"
+          >
+            <NeuralHero />
+          </div>
 
-        <div className="relative mx-auto max-w-6xl px-5 py-28 md:py-36">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">
-            AI/ML · Cloud · MLOps
+          <p className="eyebrow animate-rise">
+            // Software Development Engineer · Amazon
           </p>
-          <h1 className="mt-4 max-w-3xl text-5xl font-bold tracking-tight text-foreground md:text-6xl">
-            {site.name}
+
+          <h1 className="animate-rise delay-1 font-display mt-5 text-6xl font-bold leading-[1.02] tracking-tight md:text-7xl">
+            Siddartha
+            <br />
+            <span className="text-gradient">Darisi</span>
           </h1>
-          <p className="mt-4 max-w-2xl text-xl font-medium text-foreground/90">
-            {site.title}
-          </p>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
-            {site.tagline}
-          </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Link
-              href="/artifacts"
-              className="rounded-md bg-accent px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-accent-strong"
-            >
-              Explore Artifacts
+          <div className="animate-rise delay-2 mt-6 text-lg leading-relaxed text-muted md:text-xl">
+            I build{" "}
+            <span className="inline-block h-[1.35em] overflow-hidden align-bottom">
+              <span className="word-cycle block font-semibold text-accent">
+                {roles.map((r, i) => (
+                  <span key={`${r}-${i}`} className="block h-[1.35em]">
+                    {r}
+                  </span>
+                ))}
+              </span>
+            </span>
+            <br />
+            that makes AI reliable at enterprise scale.
+          </div>
+
+          <div className="animate-rise delay-3 mt-8 flex flex-wrap gap-4">
+            <Link href="/artifacts" className="btn-primary">
+              Explore Artifacts →
             </Link>
-            <Link
-              href="/contact"
-              className="rounded-md border border-accent px-6 py-3 text-sm font-semibold text-accent transition-colors hover:bg-accent hover:text-background"
-            >
+            <Link href="/contact" className="btn-ghost">
               Get in Touch
             </Link>
           </div>
 
-          <div className="mt-8 flex items-center gap-5 text-sm">
+          <div className="animate-rise delay-4 mt-12 hidden lg:block">
+            <SectionSpy sections={sections} />
+          </div>
+
+          <div className="animate-rise delay-4 mt-10 flex items-center gap-3 lg:mt-auto lg:pb-16">
             <a
               href={site.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted hover:text-accent"
+              aria-label="GitHub"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-line bg-raised text-muted transition-colors hover:border-accent hover:text-accent"
             >
-              GitHub ↗
+              <IconGitHub size={17} />
             </a>
             <a
               href={site.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted hover:text-accent"
+              aria-label="LinkedIn"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-line bg-raised text-muted transition-colors hover:border-accent hover:text-accent"
             >
-              LinkedIn ↗
+              <IconLinkedIn size={17} />
             </a>
-          </div>
-        </div>
-      </section>
-
-      {/* PROFESSIONAL BIO */}
-      <section id="bio" className="mx-auto max-w-6xl px-5 py-20">
-        <div className="flex items-center gap-3">
-          <Image
-            src="/brand/icon-profile.svg"
-            alt=""
-            width={40}
-            height={40}
-          />
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Professional Bio
-          </h2>
-        </div>
-
-        <div className="mt-6 max-w-3xl space-y-5 text-lg leading-relaxed text-muted">
-          <p>
-            I&apos;m a Software Development Engineer at Amazon in Seattle,
-            where I work on the AWS Quick RAG team building high-throughput
-            ingestion pipelines for Amazon Quick Suite, Q Business, and
-            Kendra — processing 10,000+ documents a day and powering RAG and
-            LLM experiences over enterprise data.
-          </p>
-          <p>
-            Before Amazon, I was a Cloud Engineer at People Tech Group, where
-            I built GenAI-driven MLOps that convert natural-language prompts
-            into validated Infrastructure-as-Code, cutting release cycles by
-            35%, and an AI/ML document pipeline for HCA Healthcare that
-            reduced manual data entry by over 80%.
-          </p>
-          <p>
-            I hold an MS in Cyber Security &amp; Privacy from New Jersey
-            Institute of Technology and a BS in Computer Science &amp;
-            Engineering from Koneru Lakshmaiah Education Foundation, and I&apos;m
-            AWS Certified Solutions Architect – Associate and AWS Certified
-            Developer – Associate. I mentor engineers on GenAI and DevOps
-            best practices and am currently pursuing graduate AI/ML studies
-            at Indiana Wesleyan University. My aspiration is building
-            reliable, responsible AI systems at enterprise scale.
-          </p>
-        </div>
-      </section>
-
-      {/* PERSONAL VALUE PROPOSITION */}
-      <section className="mx-auto max-w-6xl px-5 pb-20">
-        <div className="rounded-xl border border-line border-l-4 border-l-accent bg-surface px-8 py-10 shadow-sm md:px-12 md:py-12">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">
-            Personal Value Proposition
-          </h2>
-          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-muted">
-            {site.valueProposition}
-          </p>
-        </div>
-      </section>
-
-      {/* FEATURED ARTIFACTS */}
-      <section className="mx-auto max-w-6xl px-5 pb-20">
-        <div className="flex items-center gap-3">
-          <Image src="/brand/icon-folder.svg" alt="" width={40} height={40} />
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Portfolio Artifacts
-          </h2>
-        </div>
-
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          {artifacts.map((artifact) => (
-            <Link
-              key={artifact.href}
-              href={artifact.href}
-              className="group flex flex-col rounded-xl border border-line bg-surface p-7 transition-colors hover:border-accent"
+            <a
+              href={`mailto:${site.email}`}
+              aria-label="Email"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-line bg-raised text-muted transition-colors hover:border-accent hover:text-accent"
             >
-              <h3 className="text-xl font-semibold text-foreground">
-                {artifact.title}
-              </h3>
-              <p className="mt-3 flex-1 text-base leading-relaxed text-muted">
-                {artifact.description}
+              <IconEnvelope size={17} />
+            </a>
+            <span className="ml-2 font-mono text-xs tracking-wider text-muted">
+              Seattle, WA
+            </span>
+          </div>
+        </header>
+
+        {/* ============ RIGHT · SCROLLING CONTENT ============ */}
+        <div className="pb-10 pt-4 lg:pt-24">
+          {/* ---- About ---- */}
+          <section id="about" className="scroll-mt-28">
+            <p data-reveal className="eyebrow lg:sr-only">
+              // About
+            </p>
+            <div data-reveal className="mt-4 space-y-5 leading-relaxed text-muted lg:mt-0">
+              <p>
+                I&apos;m a Software Development Engineer at{" "}
+                <span className="font-medium text-foreground">Amazon</span> in
+                Seattle, on the AWS Quick RAG team — building high-throughput
+                ingestion pipelines for{" "}
+                <span className="font-medium text-foreground">
+                  Amazon Quick Suite, Q Business, and Kendra
+                </span>{" "}
+                that process 10,000+ documents a day and power RAG and LLM
+                experiences over enterprise data.
               </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {artifact.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-md bg-raised px-2.5 py-1 text-xs font-medium text-muted"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <span className="mt-6 text-sm font-semibold text-accent">
-                View artifact →
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
+              <p>
+                Before Amazon, at People Tech Group I built GenAI-driven MLOps that
+                turn natural-language prompts into validated Infrastructure-as-Code,
+                and an AI/ML document pipeline for HCA Healthcare. I hold an MS in
+                Cyber Security &amp; Privacy (NJIT), two AWS Associate
+                certifications, and I&apos;m currently deepening my AI/ML expertise
+                through graduate study at Indiana Wesleyan University.
+              </p>
+              <p>
+                I mentor engineers on GenAI and DevOps practices. My north star:{" "}
+                <span className="font-medium text-foreground">
+                  reliable, responsible AI at enterprise scale
+                </span>
+                .
+              </p>
+            </div>
 
-      {/* CONTACT CTA */}
-      <section className="border-t border-line bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-20 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Let&apos;s build something intelligent
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-muted">
-            Open to conversations with recruiters, collaborators, and fellow
-            builders about AI/ML, cloud infrastructure, and MLOps.
-          </p>
-          <div className="mt-8">
-            <Link
-              href="/contact"
-              className="rounded-md bg-accent px-6 py-3 text-sm font-semibold text-background transition-colors hover:bg-accent-strong"
+            {/* Stats */}
+            <dl
+              data-reveal
+              className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-4"
             >
-              Get in Touch
+              {stats.map((s) => (
+                <div key={s.label} className="bg-surface px-4 py-4">
+                  <dt className="sr-only">{s.label}</dt>
+                  <dd className="font-display text-2xl font-bold text-gradient">
+                    <Counter value={s.value} suffix={s.suffix} />
+                  </dd>
+                  <dd className="mt-1 text-[0.7rem] leading-snug text-muted">
+                    {s.label}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+
+          {/* ---- Value Proposition ---- */}
+          <section id="value" className="mt-20 scroll-mt-28">
+            <div
+              data-reveal
+              className="card relative overflow-hidden p-8 md:p-10"
+            >
+              <div
+                aria-hidden
+                className="absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-25"
+                style={{
+                  background: "radial-gradient(circle, var(--teal), transparent 70%)",
+                }}
+              />
+              <div
+                aria-hidden
+                className="absolute -bottom-24 -left-16 h-52 w-52 rounded-full opacity-20"
+                style={{
+                  background: "radial-gradient(circle, var(--violet), transparent 70%)",
+                }}
+              />
+              <p className="eyebrow flex items-center gap-2">
+                <IconSparkle size={14} /> Personal Value Proposition
+              </p>
+              <p className="font-display relative mt-5 text-xl font-medium leading-snug tracking-tight md:text-2xl">
+                {site.valueProposition}
+              </p>
+            </div>
+          </section>
+
+          {/* ---- Experience preview ---- */}
+          <section id="experience" className="mt-20 scroll-mt-28">
+            <p data-reveal className="eyebrow">
+              // Experience
+            </p>
+            <div className="dim-list mt-6 space-y-4">
+              {experiencePreview.map((e) => (
+                <div
+                  key={e.company}
+                  data-reveal
+                  className="card grid gap-2 p-6 md:grid-cols-[130px_1fr] md:gap-5"
+                >
+                  <p className="font-mono text-xs uppercase tracking-wider text-muted md:pt-1">
+                    {e.range}
+                  </p>
+                  <div>
+                    <h3 className="font-display text-lg font-semibold text-foreground">
+                      {e.role}
+                    </h3>
+                    <p className="text-sm text-accent">{e.company}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">
+                      {e.summary}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {e.tags.map((t) => (
+                        <span key={t} className="chip">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <Link
+              data-reveal
+              href="/experience"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent transition-colors hover:text-accent-strong"
+            >
+              Full résumé &amp; skills <IconArrowRight size={15} />
             </Link>
-          </div>
-          <p className="mt-5 text-sm text-muted">
-            Or ask my AI assistant — the chat bubble in the corner.
-          </p>
+          </section>
+
+          {/* ---- Artifacts ---- */}
+          <section id="artifacts" className="mt-20 scroll-mt-28">
+            <div data-reveal className="flex items-end justify-between">
+              <p className="eyebrow">// Portfolio Artifacts</p>
+              <Link
+                href="/artifacts"
+                className="text-sm font-semibold text-accent transition-colors hover:text-accent-strong"
+              >
+                View all →
+              </Link>
+            </div>
+            <div className="dim-list mt-6 space-y-5">
+              {artifacts.map((artifact) => (
+                <Link
+                  key={artifact.href}
+                  href={artifact.href}
+                  data-reveal
+                  className="card card-lift group grid gap-5 p-6 sm:grid-cols-[150px_1fr]"
+                >
+                  <div className="h-[92px] overflow-hidden rounded-xl border border-line bg-raised p-2">
+                    <ArtifactThumb kind={artifact.kind} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-mono text-xs text-accent">
+                      {artifact.number}
+                    </span>
+                    <h3 className="font-display mt-1 text-xl font-semibold tracking-tight transition-colors group-hover:text-accent">
+                      {artifact.title}
+                    </h3>
+                    <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
+                      {artifact.description}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {artifact.tags.map((tag) => (
+                        <span key={tag} className="chip">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          {/* ---- Contact CTA ---- */}
+          <section id="contact" className="mt-20 scroll-mt-28">
+            <div data-reveal className="card relative overflow-hidden p-8 text-center md:p-12">
+              <div className="hairline-gradient absolute inset-x-0 top-0" />
+              <h2 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+                Let&apos;s build something{" "}
+                <span className="text-gradient">intelligent</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-md text-muted">
+                Open to conversations with recruiters, collaborators, and fellow
+                builders about AI/ML, cloud infrastructure, and MLOps.
+              </p>
+              <div className="mt-7 flex justify-center">
+                <Link href="/contact" className="btn-primary">
+                  Get in Touch →
+                </Link>
+              </div>
+              <p className="mt-5 font-mono text-xs tracking-wider text-muted">
+                or ask my AI assistant — the chat bubble in the corner
+              </p>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      {/* ============ TECH MARQUEE ============ */}
+      <section
+        aria-label="Technologies"
+        className="marquee mt-6 overflow-hidden border-y border-line bg-surface/50 py-4"
+      >
+        <div className="marquee-track flex w-max gap-3">
+          {[...techs, ...techs].map((t, i) => (
+            <span key={`${t}-${i}`} className="chip whitespace-nowrap !text-[0.72rem]">
+              {t}
+            </span>
+          ))}
         </div>
       </section>
     </>

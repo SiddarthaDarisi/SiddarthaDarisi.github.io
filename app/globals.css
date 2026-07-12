@@ -1,65 +1,365 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Brand: navy + teal anchors (from logo), teal→cyan→violet
+   signature gradient, amber for metric pops.
+   Dual theme: data-theme="dark" | "light" set on <html> by the
+   no-FOUC script in layout.tsx (localStorage → OS preference).
+   ============================================================ */
+
 :root {
-  /* Brand palette — derived from brand SVG kit */
   --navy: #152238;
-  --navy-deep: #0b1926;
   --teal: #17b8be;
   --cyan: #12bcd5;
-  --offwhite: #f9f9f9;
+  --violet: #7c6cf6;
 
-  /* Light theme (default) */
-  --background: #f7f9fa;
+  /* Light defaults — light is the site default theme */
+  --background: #f7f9fb;
   --surface: #ffffff;
-  --surface-raised: #eef3f5;
+  --raised: #ecf1f6;
   --foreground: #152238;
-  --muted: #4b5a6e;
-  --accent: #0e9297;
-  --accent-strong: #0b7478;
-  --line: #dbe4e8;
-  --hero-overlay: rgba(247, 249, 250, 0.82);
+  --muted: #52657c;
+  --accent: #0d9498;
+  --accent-strong: #087478;
+  --violet-strong: #5b4bd5;
+  --gold: #b3720a;
+  --line: rgba(21, 34, 56, 0.12);
+  --glass: rgba(255, 255, 255, 0.72);
+  --glow: 0 12px 36px rgba(13, 148, 152, 0.14);
+  --glow-strong: 0 16px 50px rgba(13, 148, 152, 0.22);
+  --grad: linear-gradient(115deg, #0d9498 0%, #0f7fae 45%, #5b4bd5 100%);
+  --ambient-a: rgba(23, 184, 190, 0.09);
+  --ambient-b: rgba(124, 108, 246, 0.07);
+  --ambient-c: rgba(18, 188, 213, 0.05);
+  --grid-line: rgba(21, 34, 56, 0.05);
+}
+
+:root[data-theme="dark"] {
+  --background: #060c16;
+  --surface: #0c1626;
+  --raised: #16233a;
+  --foreground: #eef4f9;
+  --muted: #93a7bc;
+  --accent: #17b8be;
+  --accent-strong: #4fd6db;
+  --violet-strong: #a89cff;
+  --gold: #f5b342;
+  --line: rgba(148, 170, 194, 0.15);
+  --glass: rgba(12, 22, 38, 0.7);
+  --glow: 0 0 44px rgba(23, 184, 190, 0.2);
+  --glow-strong: 0 8px 60px rgba(23, 184, 190, 0.35);
+  --grad: linear-gradient(115deg, #4fd6db 0%, #17b8be 40%, #7c6cf6 100%);
+  --ambient-a: rgba(23, 184, 190, 0.13);
+  --ambient-b: rgba(124, 108, 246, 0.1);
+  --ambient-c: rgba(18, 188, 213, 0.07);
+  --grid-line: rgba(148, 170, 194, 0.055);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-surface: var(--surface);
-  --color-raised: var(--surface-raised);
+  --color-raised: var(--raised);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
+  --color-violet-strong: var(--violet-strong);
+  --color-gold: var(--gold);
   --color-line: var(--line);
   --color-navy: var(--navy);
   --color-teal: var(--teal);
+  --color-cyan: var(--cyan);
+  --color-violet: var(--violet);
   --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-space-grotesk);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b1926;
-    --surface: #152238;
-    --surface-raised: #1c2d47;
-    --foreground: #f9f9f9;
-    --muted: #9fb0c3;
-    --accent: #17b8be;
-    --accent-strong: #4fd6db;
-    --line: #24374f;
-    --hero-overlay: rgba(11, 25, 38, 0.78);
-  }
 }
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light;
 }
+:root[data-theme="dark"] { color-scheme: dark; }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+/* Ambient color field */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(720px 520px at 8% -6%, var(--ambient-a), transparent 62%),
+    radial-gradient(860px 620px at 96% 10%, var(--ambient-b), transparent 62%),
+    radial-gradient(980px 720px at 50% 112%, var(--ambient-c), transparent 62%);
+}
+
+/* Blueprint grid, faded toward the fold */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 100% 64% at 50% 0%, black 26%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 100% 64% at 50% 0%, black 26%, transparent 78%);
 }
 
 ::selection {
   background: var(--teal);
   color: var(--navy);
+}
+
+/* ---------- Brand utilities ---------- */
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+}
+
+.text-gradient {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eyebrow {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  color: #ffffff;
+  background: var(--grad);
+  background-size: 150% 150%;
+  box-shadow: var(--glow);
+  transition: background-position 0.35s ease, transform 0.2s ease, box-shadow 0.25s ease;
+}
+.btn-primary:hover {
+  background-position: 90% 50%;
+  transform: translateY(-1px);
+  box-shadow: var(--glow-strong);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  border: 1px solid var(--line);
+  background: var(--glass);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.btn-ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.card {
+  border-radius: 1rem;
+  border: 1px solid var(--line);
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease,
+    background-color 0.35s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+}
+
+/* Cursor spotlight — --mx/--my set by ScrollFx's delegated listener */
+.card {
+  position: relative;
+  overflow: hidden;
+}
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--accent) 14%, transparent),
+    transparent 65%
+  );
+}
+.card:hover::after {
+  opacity: 1;
+}
+
+/* Gradient-border variant: neutral until hovered */
+.card-gradient {
+  position: relative;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    var(--grad) border-box;
+  border: 1px solid transparent;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  background: var(--raised);
+  padding: 0.28rem 0.8rem;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.hairline-gradient {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--teal), var(--violet), transparent);
+  opacity: 0.55;
+}
+
+.icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.25rem;
+  width: 3.25rem;
+  border-radius: 1rem;
+  border: 1px solid var(--line);
+  background: var(--raised);
+  color: var(--accent);
+}
+
+/* Hover-dim list (Brittany-style): hovering one child dims the rest */
+@media (hover: hover) {
+  .dim-list:hover > *:not(:hover) {
+    opacity: 0.45;
+  }
+  .dim-list > * {
+    transition: opacity 0.3s ease;
+  }
+}
+
+/* Theme-conditional visibility (e.g. wordmark variants) */
+.dark-only { display: none; }
+:root[data-theme="dark"] .dark-only { display: block; }
+:root[data-theme="dark"] .light-only { display: none; }
+
+/* ---------- Motion ---------- */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-rise { animation: rise 0.85s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.18s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.44s; }
+.delay-5 { animation-delay: 0.6s; }
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+.animate-float { animation: float-slow 7s ease-in-out infinite; }
+
+@keyframes scroll-hint {
+  0%, 100% { transform: translateY(0); opacity: 0.9; }
+  50% { transform: translateY(8px); opacity: 0.4; }
+}
+.animate-scroll-hint { animation: scroll-hint 1.8s ease-in-out infinite; }
+
+/* Rotating role words (hero) */
+@keyframes word-cycle {
+  0%, 26% { transform: translateY(0); }
+  33%, 59% { transform: translateY(-1.3em); }
+  66%, 92% { transform: translateY(-2.6em); }
+  100% { transform: translateY(-3.9em); }
+}
+.word-cycle {
+  animation: word-cycle 9s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+}
+
+/* Marquee (tech strip) */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 36s linear infinite;
+  will-change: transform;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Neural mesh (hero SVG) */
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+@keyframes edge-dash {
+  to { stroke-dashoffset: -120; }
+}
+.mesh-node { animation: node-pulse 4.5s ease-in-out infinite; }
+.mesh-edge {
+  stroke-dasharray: 6 14;
+  animation: edge-dash 9s linear infinite;
+}
+
+/* Scroll-reveal (driven by ScrollFx observer) */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-reveal].revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-reveal] { opacity: 1; transform: none; transition: none; }
+  .animate-rise, .animate-float, .animate-scroll-hint,
+  .word-cycle, .marquee-track, .mesh-node, .mesh-edge {
+    animation: none;
+  }
 }
