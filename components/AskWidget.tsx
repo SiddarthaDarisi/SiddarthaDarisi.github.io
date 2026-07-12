@@ -20,7 +20,13 @@ type Message =
       linkLabel?: string;
       topic?: string;
       viaLlm?: boolean;
+      /** Render a prominent contact CTA button under the reply. */
+      cta?: string;
     };
+
+/** Hiring/contact intent → the reply gets a physical "Hire Me" button. */
+const HIRE_INTENT =
+  /\b(hire|hiring|recruit|available|availability|open to work|opportunit|position|role|job|interview|salary|resume|cv|contact|reach|email|get in touch)\b/i;
 
 export default function AskWidget() {
   const index = useMemo(
@@ -80,8 +86,7 @@ export default function AskWidget() {
         {
           kind: "bot",
           text: "I don't have that specific detail on hand — but Siddartha's track record says a lot: he's gone from GenAI MLOps to building RAG ingestion at Amazon scale, picking up new stacks quickly along the way. He'd love to talk specifics directly.",
-          link: "/contact",
-          linkLabel: "Reach out to Siddartha",
+          cta: "Contact Siddartha",
         },
       ]);
       return;
@@ -89,11 +94,13 @@ export default function AskWidget() {
 
     const top = profileKB.find((c) => c.id === hits[0].id)!;
     const key = getGeminiKey();
+    const wantsHire = HIRE_INTENT.test(q) || top.id === "kb-contact";
+    const cta = wantsHire ? "Hire Me — get in touch" : undefined;
 
     if (!key) {
       setMessages((m) => [
         ...m,
-        { kind: "bot", text: top.text, link: top.link, topic: top.topic },
+        { kind: "bot", text: top.text, link: top.link, topic: top.topic, cta },
       ]);
       return;
     }
@@ -114,12 +121,12 @@ export default function AskWidget() {
       );
       setMessages((m) => [
         ...m,
-        { kind: "bot", text, link: top.link, topic: top.topic, viaLlm: true },
+        { kind: "bot", text, link: top.link, topic: top.topic, viaLlm: true, cta },
       ]);
     } catch {
       setMessages((m) => [
         ...m,
-        { kind: "bot", text: top.text, link: top.link, topic: top.topic },
+        { kind: "bot", text: top.text, link: top.link, topic: top.topic, cta },
       ]);
     } finally {
       setBusy(false);
@@ -221,13 +228,22 @@ export default function AskWidget() {
                   <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
                     {msg.text}
                   </p>
-                  {msg.link && (
+                  {msg.link && msg.link !== "/contact" && (
                     <Link
                       href={msg.link}
                       onClick={() => setOpen(false)}
                       className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-accent hover:text-accent-strong"
                     >
                       {msg.linkLabel ?? "See more"} <IconArrowRight size={12} />
+                    </Link>
+                  )}
+                  {msg.cta && (
+                    <Link
+                      href="/contact"
+                      onClick={() => setOpen(false)}
+                      className="btn-primary mt-2.5 !px-4 !py-2 text-xs"
+                    >
+                      {msg.cta} <IconArrowRight size={13} />
                     </Link>
                   )}
                 </div>
