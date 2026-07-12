@@ -106,6 +106,8 @@ const skillGroups = [
 const certifications = [
   "AWS Certified Solutions Architect – Associate",
   "AWS Certified Developer – Associate",
+  "CompTIA Security+",
+  "Certified Ethical Hacker (CEH) v12 — EC-Council",
 ];
 
 function renderBullet(bullet: string, key: number) {

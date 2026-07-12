@@ -29,7 +29,7 @@ const sections = [
 
 const stats = [
   { value: 10, suffix: "k+", label: "docs/day processed by pipelines I build at Amazon" },
-  { value: 2, suffix: "×", label: "AWS certified — Architect & Developer" },
+  { value: 4, suffix: "", label: "certifications — AWS ×2, Security+, CEH v12" },
   { value: 2, suffix: "", label: "graduate programs — MS Cyber Security + AI/ML (in progress)" },
   { value: 6, suffix: "", label: "engineers mentored in GenAI & DevOps" },
 ];
@@ -186,9 +186,10 @@ export default function Home() {
                 Before Amazon, at People Tech Group I built GenAI-driven MLOps that
                 turn natural-language prompts into validated Infrastructure-as-Code,
                 and an AI/ML document pipeline for HCA Healthcare. I hold an MS in
-                Cyber Security &amp; Privacy (NJIT), two AWS Associate
-                certifications, and I&apos;m currently deepening my AI/ML expertise
-                through graduate study at Indiana Wesleyan University.
+                Cyber Security &amp; Privacy (NJIT) and four certifications — two
+                AWS Associate, CompTIA Security+, and CEH v12 — and I&apos;m
+                currently deepening my AI/ML expertise through graduate study at
+                Indiana Wesleyan University.
               </p>
               <p>
                 I mentor engineers on GenAI and DevOps practices. My north star:{" "}
