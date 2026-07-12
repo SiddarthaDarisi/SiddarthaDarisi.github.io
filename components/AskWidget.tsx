@@ -71,7 +71,9 @@ export default function AskWidget() {
     setInput("");
     setMessages((m) => [...m, { kind: "user", text: q }]);
 
-    const hits = index.search(q, 3);
+    // Below this BM25 score the match is too weak to trust — pivot to contact.
+    const CONFIDENCE = 2.2;
+    const hits = index.search(q, 3).filter((h) => h.score >= CONFIDENCE);
     if (hits.length === 0) {
       setMessages((m) => [
         ...m,
@@ -145,7 +147,7 @@ export default function AskWidget() {
 
       {/* Panel */}
       {open && (
-        <div className="card fixed bottom-24 right-5 z-50 flex w-[min(92vw,380px)] flex-col overflow-hidden shadow-2xl">
+        <div className="card !fixed bottom-24 right-5 z-50 flex w-[min(92vw,380px)] flex-col overflow-hidden shadow-2xl">
           <div className="flex items-center justify-between border-b border-line px-4 py-3">
             <div className="flex items-center gap-2.5">
               <span className="flex h-8 w-8 items-center justify-center rounded-lg text-white" style={{ background: "var(--grad)" }}>
