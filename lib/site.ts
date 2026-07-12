@@ -1,3 +1,6 @@
+/** Cloudflare Worker that proxies Gemini for all visitors ("" disables). */
+export const ASK_PROXY_URL = "";
+
 export const site = {
   name: "Siddartha Darisi",
   title: "Software Development Engineer · AI/ML & Cloud",

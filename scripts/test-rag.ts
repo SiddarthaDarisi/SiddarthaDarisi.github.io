@@ -27,3 +27,10 @@ for (const q of queries) {
     `Q: ${q}\n → ${hits.length === 0 ? "NO HIT (contact fallback)" : `${top?.id} (${hits[0].score.toFixed(2)}) — ${top?.text.slice(0, 90)}…`}\n`
   );
 }
+
+// user-reported misses
+for (const q of ["is siddartha any good in speaking", "does siddartha know english", "how are his communication skills"]) {
+  const hits = index.search(q, 3);
+  const top = hits[0] ? profileKB.find((c) => c.id === hits[0].id) : undefined;
+  console.log(`Q: ${q}\n → ${hits.length === 0 ? "NO HIT" : `${top?.id} (${hits[0].score.toFixed(2)})`}\n`);
+}

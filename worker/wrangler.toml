@@ -1,0 +1,6 @@
+name = "ask-siddartha"
+main = "index.ts"
+compatibility_date = "2026-07-01"
+
+# Secret (set via `wrangler secret put GEMINI_API_KEY`, never in code):
+#   GEMINI_API_KEY — Google AI Studio key used server-side only

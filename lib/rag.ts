@@ -99,6 +99,32 @@ export function setGeminiKey(key: string | null): void {
 }
 
 /**
+ * Compose an answer via the site's Cloudflare Worker proxy (key stays
+ * server-side). Throws when the proxy is disabled or errors.
+ */
+export async function proxyAnswer(
+  proxyUrl: string,
+  system: string,
+  context: string,
+  question: string
+): Promise<string> {
+  if (!proxyUrl) throw new Error("Proxy disabled");
+  const res = await fetch(proxyUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ system, context, question }),
+  });
+  const data = (await res.json().catch(() => ({}))) as {
+    text?: string;
+    error?: string;
+  };
+  if (!res.ok || !data.text) {
+    throw new Error(data.error ?? `Proxy error ${res.status}`);
+  }
+  return data.text;
+}
+
+/**
  * Compose an answer with Gemini over retrieved context. Called directly from
  * the browser with the visitor's own free AI Studio key; the site ships no key.
  */

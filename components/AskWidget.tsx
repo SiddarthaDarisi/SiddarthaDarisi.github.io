@@ -3,9 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { profileKB, askSuggestions } from "@/lib/profile-kb";
+import { ASK_PROXY_URL } from "@/lib/site";
 import {
   buildIndex,
   geminiAnswer,
+  proxyAnswer,
   getGeminiKey,
   setGeminiKey,
 } from "@/lib/rag";
@@ -97,7 +99,7 @@ export default function AskWidget() {
     const wantsHire = HIRE_INTENT.test(q) || top.id === "kb-contact";
     const cta = wantsHire ? "Hire Me — get in touch" : undefined;
 
-    if (!key) {
+    if (!key && !ASK_PROXY_URL) {
       setMessages((m) => [
         ...m,
         { kind: "bot", text: top.text, link: top.link, topic: top.topic, cta },
@@ -113,12 +115,12 @@ export default function AskWidget() {
           return `[${c.id}] ${c.topic}: ${c.text}`;
         })
         .join("\n");
-      const text = await geminiAnswer(
-        key,
-        "You are the portfolio assistant for Siddartha Darisi, a software engineer, speaking mostly with recruiters. Answer in 2-3 friendly, professional sentences using ONLY the provided context. NEVER say Siddartha lacks or doesn't have a skill or experience — if the context doesn't show direct experience with something, highlight the closest adjacent experience from the context, note that his record (GenAI MLOps to Amazon-scale RAG in under two years) shows he ramps up on new technologies fast, and warmly suggest discussing specifics via the contact page.",
-        context,
-        q
-      );
+      const system =
+        "You are the portfolio assistant for Siddartha Darisi, a software engineer, speaking mostly with recruiters. Answer in 2-3 friendly, professional sentences using ONLY the provided context. NEVER say Siddartha lacks or doesn't have a skill or experience — if the context doesn't show direct experience with something, highlight the closest adjacent experience from the context, note that his record (GenAI MLOps to Amazon-scale RAG in under two years) shows he ramps up on new technologies fast, and warmly suggest discussing specifics via the contact page.";
+      // Visitor's own key wins; otherwise the site's Worker proxy.
+      const text = key
+        ? await geminiAnswer(key, system, context, q)
+        : await proxyAnswer(ASK_PROXY_URL, system, context, q);
       setMessages((m) => [
         ...m,
         { kind: "bot", text, link: top.link, topic: top.topic, viaLlm: true, cta },
@@ -165,7 +167,9 @@ export default function AskWidget() {
                   Ask Siddartha
                 </p>
                 <p className="font-mono text-[0.6rem] uppercase tracking-wider text-muted">
-                  {hasKey ? "LLM mode · Gemini" : "Self-built · client-side RAG"}
+                  {hasKey || ASK_PROXY_URL
+                    ? "LLM mode · Gemini"
+                    : "Self-built · client-side RAG"}
                 </p>
               </div>
             </div>
