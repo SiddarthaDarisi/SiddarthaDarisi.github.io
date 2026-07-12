@@ -92,35 +92,39 @@ export const artifacts: Artifact[] = [
     slug: "triage-copilot",
     title: "Triage Copilot — On-Call AI Assistant",
     subtitle:
-      "An AI agent built in the AI Lab that walks an engineer through a production alert at 3am — grounded in curated on-call documentation, running live below",
-    tags: ["AI Agent", "Generative AI", "AWS Operations", "Knowledge Grounding"],
+      "An AI agent that advises but never executes — built for a sleep-deprived engineer at 3am, and designed around what it refuses to do",
+    tags: ["AI Agent", "Responsible AI", "AWS Operations", "Knowledge Grounding"],
     introduction:
-      "Triage Copilot is a working AI agent for on-call engineers, built during the AI Lab activity. Describe a production alert — \"Redshift disk at 92%\", \"Lambda throwing 429s\", a CloudWatch alarm storm — and it answers from curated on-call documentation: what is likely happening, what to check first, and how to mitigate, the exact workflow of a 3am page. It is embedded live below: try it.",
+      "Triage Copilot is a Socratic triage guide for a failed AWS data pipeline: it asks one question at a time, sequences an on-call engineer toward a testable hypothesis, and states a confidence level and a falsification condition for every conclusion. It never runs a command and never declares an incident resolved. It's embedded live below — ask it about a Redshift or Lambda failure and see it work the way it was designed to.",
     description:
-      "The agent is a single-purpose assistant grounded in a custom knowledge base of on-call documentation for the AWS services I operate — Amazon Redshift, AWS Lambda, and CloudWatch — covering symptoms, first checks, diagnosis paths, mitigations, and escalation criteria. Built on Chatbase's LLM agent platform, it combines that document grounding with behavioral instructions that keep it in role: direct, structured answers for an engineer under incident pressure, and honesty when a question falls outside its runbook coverage. It is deliberately not a general chatbot — a one-purpose agent grounded in domain documents is what makes it dependable enough to be useful during a real page.",
+      "This bot came out of three earlier AI Lab exercises where I tested an LLM comparison, a custom tutoring GPT, and a research assistant against questions I already knew the answers to — and every one of them failed the same way: not by being wrong, but by being confidently incomplete in ways invisible from inside the output. Triage Copilot is a direct response to that finding. Because the model cannot see live infrastructure state, every design decision follows from one constraint: it advises, it never acts. It won't provide state-changing commands, won't invent a metric or system-table name it isn't sure exists, won't declare an incident over, and says \"that is not in the runbook I have\" rather than reaching for a plausible-sounding answer from general AWS knowledge. Most of its system prompt is dedicated to constraining the model, not empowering it.",
     objective:
-      "To take the AI Lab from experiment to product: apply hands-on lessons about LLM behavior, knowledge grounding, and instruction design to ship an agent that solves a real problem from my own job — guiding on-call triage — rather than a demo chatbot, and to publish it where the audience can test it directly.",
+      "To design and ship an assistant for a real failure mode I'd already identified in my own domain — a sleep-deprived on-call engineer who needs help sequencing an investigation, not a tool that acts on a half-formed theory — and to prove the design by breaking it on purpose before calling it done.",
     process: [
-      "Chose a real problem from my own domain: on-call triage for the AWS services I operate (Redshift, Lambda, CloudWatch).",
-      "Curated and structured the on-call documentation that became the agent's knowledge base — symptoms, immediate checks with commands, diagnosis steps, mitigations, and escalation criteria.",
-      "Configured the agent on Chatbase and uploaded the documentation as grounding sources.",
-      "Wrote behavioral instructions defining the persona (calm, direct, incident-focused), the answer structure, and guardrails to stay within the runbook scope.",
-      "Tested with realistic alert phrasings and error strings an engineer would paste at 3am, then refined the docs and instructions where answers were weak.",
-      "Embedded the live agent on this page so recruiters and engineers can interrogate it directly.",
+      "Ran three earlier AI Lab exercises (LLM comparison, custom GPT, research assistant) against questions I knew the answers to, and found a consistent failure pattern: fluent, plausible output with invisible gaps.",
+      "Applied a design-thinking pass: defined the user as \"me, on call, at 3am,\" and rejected two tempting options — an auto-remediation bot and a log-ingesting bot — because both required trusting the model with live state it can't actually see.",
+      "Chose a Socratic triage guide instead: it asks, it advises, it never acts. The limitation became the design.",
+      "Wrote a diagnostic runbook (Lambda → Redshift failure modes) and a system prompt where every behavioral rule states its own reason, so the model can't reinterpret an unexplained instruction.",
+      "Set the required conclusion format — HYPOTHESIS / CONFIDENCE / FALSIFY — so a confidence level is always visible and every hypothesis names the one check that would disprove it.",
+      "Ran five adversarial test scenarios, including a direct request for a restart command and a question deliberately outside the runbook's scope, to see whether the constraints held under pressure.",
+      "Found a real bug: Chatbase's own \"Initial Message\" setting silently overrode my no-greeting instruction. Fixed it in the platform config and re-tested — the prompt alone wasn't the whole system.",
     ],
     tools: [
       "Chatbase (LLM agent platform)",
-      "Large language model with document grounding (RAG)",
-      "Knowledge-base curation (AWS on-call runbook content)",
-      "Prompt engineering & behavioral instructions",
-      "AWS domain expertise (Redshift, Lambda, CloudWatch)",
-      "HTML iframe embed",
+      "Hand-written diagnostic runbook (Lambda ↔ Redshift failure modes) plus AWS documentation as grounding sources",
+      "System-prompt design: behavioral constraints, refusal conditions, required output structure",
+      "Design thinking (empathy → define → ideate → prototype → test)",
+      "Adversarial testing against five scenarios, including a jailbreak attempt for a restart command",
     ],
     uniqueValue:
-      "Most AI-lab artifacts are throwaway chats with a model; this is a scoped, grounded agent that solves a problem from my actual job. It demonstrates the judgment that makes GenAI useful in production: constraining an LLM to curated domain documents, designing its behavior for a high-stakes user (an engineer mid-incident), and knowing that a dependable one-purpose agent beats an unreliable general one.",
+      "Most AI-lab bots are graded on what they can do. This one is graded on what it refuses to do under pressure — it turned down a direct request for a restart command, admitted a question was outside its runbook rather than guessing from general AWS knowledge, and pushed back when I asserted a wrong conclusion with confidence. Constraining a capable model is a harder design problem than making it more capable, and the five test scenarios exist to prove the constraints actually hold rather than just read well in the prompt.",
     relevance:
-      "My work at Amazon is building RAG ingestion infrastructure — the machinery that grounds enterprise AI in documents. Triage Copilot is that same discipline exercised end-to-end at product scale: for hiring managers it proves applied GenAI skills plus operational AWS depth; for on-call engineers it is a genuinely reusable triage aid.",
+      "My day job is building the RAG ingestion infrastructure that grounds enterprise AI in real documents; this artifact is that same judgment applied to a much higher-stakes question — what happens when the model is confidently wrong and the user is too tired to catch it. For hiring managers it's evidence of responsible-AI design instincts, not just prompt-writing; for on-call engineers it's a tool built by someone who has actually been paged.",
     references: [
+      {
+        label: "Full AI Lab write-up (PDF) — all four activities, the bot's complete system prompt, and a test transcript",
+        url: "/AI_Lab_Complete.pdf",
+      },
       { label: "Chatbase documentation", url: "https://www.chatbase.co" },
       {
         label: 'Lewis et al. (2020), "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"',

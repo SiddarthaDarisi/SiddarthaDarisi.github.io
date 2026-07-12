@@ -74,9 +74,9 @@ const artifacts = [
     kind: "chatbot" as const,
     title: "Triage Copilot — On-Call AI Assistant",
     description:
-      "An AI agent built in the AI Lab that walks an engineer through a production alert at 3am — grounded in curated on-call docs for Redshift, Lambda, and CloudWatch. Live demo on its page.",
+      "An AI agent that advises but never executes — it questions its way to a hypothesis for a failed AWS pipeline and refuses to guess. Built for a 3am page. Live demo on its page.",
     href: "/artifacts/triage-copilot",
-    tags: ["AI Agent", "Generative AI", "AWS Ops"],
+    tags: ["AI Agent", "Responsible AI", "AWS Ops"],
   },
 ];
 

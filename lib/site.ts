@@ -7,7 +7,7 @@ export const site = {
   url: "https://siddarthadarisi.github.io",
   email: "siddarthadarisi@gmail.com",
   github: "https://github.com/SiddarthaDarisi",
-  linkedin: "https://www.linkedin.com/in/siddartha-darisi",
+  linkedin: "https://www.linkedin.com/in/siddartha-d/",
   location: "Seattle, WA",
   tagline:
     "Building the ingestion pipelines, MLOps automation, and RAG infrastructure that make AI reliable at enterprise scale.",

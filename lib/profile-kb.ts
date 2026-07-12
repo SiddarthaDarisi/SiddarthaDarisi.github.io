@@ -347,7 +347,7 @@ export const profileKB: KBChunk[] = [
   {
     id: "kb-artifact-triage-copilot",
     topic: "Triage Copilot artifact",
-    text: "Triage Copilot is an on-call triage AI agent Siddartha built in the AI Lab to guide engineers through 3am production alerts. It is a single-purpose LLM agent grounded in on-call documentation he curated for the AWS services he operates — Redshift, Lambda, and CloudWatch — answering with what is likely happening, what to check first, and how to mitigate. You can try it live on its artifact page.",
+    text: "Triage Copilot is an on-call AI agent Siddartha built in the AI Lab that advises but never executes: it asks one question at a time to guide an engineer toward a testable hypothesis for a failed AWS pipeline, and states a confidence level plus a falsification condition for every conclusion. It refuses state-changing commands, refuses to invent AWS metrics it isn't sure exist, and says \"that is not in the runbook I have\" rather than guess. You can try it live on its artifact page.",
     keywords: [
       "artifact",
       "triage copilot",
