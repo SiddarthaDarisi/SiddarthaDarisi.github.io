@@ -81,6 +81,14 @@ const cases: Case[] = [
   { q: "who is siddartha", expect: ["kb-value-proposition", "kb-summary-current-focus"] },
   { q: "tell me about yourself", expect: ["kb-value-proposition"] },
   { q: "what are his strengths", expect: ["kb-value-proposition", "kb-communication", "kb-skills-competencies"] },
+  // --- live QA findings (retrieval-mode robustness) ---
+  { q: "what is his linkedin", expect: ["kb-contact"] },
+  { q: "github link", expect: ["kb-contact"] },
+  { q: "whats his github", expect: ["kb-contact"] },
+  { q: "where does he live", expect: ["kb-contact"] },
+  { q: "what is his latest experience", expect: ["kb-amazon-role"] },
+  { q: "current position", expect: ["kb-amazon-role"] },
+  { q: "tell me his greatest strength", expect: ["kb-value-proposition"] },
   // --- recruiter cold-test findings ---
   { q: "what company do you currently work for", expect: ["kb-amazon-role"] },
   { q: "have you built rag systems", expect: ["kb-amazon-role"] },

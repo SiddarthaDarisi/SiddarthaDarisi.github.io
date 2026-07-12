@@ -123,12 +123,14 @@ export default function AskWidget() {
     // vaguely-phrased questions still get a real answer. If nothing matches at
     // all, anchor on the identity chunks so "who is he" always resolves.
     const hits = index.search(q, 5);
+    const anchorIds = [
+      "kb-value-proposition",
+      "kb-summary-current-focus",
+      "kb-contact",
+    ];
     const contextChunks = hits.length
       ? hits.map((h) => profileKB.find((c) => c.id === h.id)!)
-      : profileKB.filter(
-          (c) =>
-            c.id === "kb-value-proposition" || c.id === "kb-summary-current-focus"
-        );
+      : profileKB.filter((c) => anchorIds.includes(c.id));
     const topHit = hits.length ? profileKB.find((c) => c.id === hits[0].id) : undefined;
 
     setBusy(true);
