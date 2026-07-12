@@ -28,10 +28,10 @@ const sections = [
 ];
 
 const stats = [
-  { value: 10, suffix: "k+", label: "documents ingested daily" },
-  { value: 60, suffix: "%", label: "faster ML deployments" },
-  { value: 35, suffix: "%", label: "shorter release cycles" },
-  { value: 2, suffix: "×", label: "AWS certified" },
+  { value: 10, suffix: "k+", label: "docs/day processed by pipelines I build at Amazon" },
+  { value: 2, suffix: "×", label: "AWS certified — Architect & Developer" },
+  { value: 2, suffix: "", label: "graduate programs — MS Cyber Security + AI/ML (in progress)" },
+  { value: 6, suffix: "", label: "engineers mentored in GenAI & DevOps" },
 ];
 
 const techs = [
