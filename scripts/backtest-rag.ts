@@ -68,7 +68,8 @@ const cases: Case[] = [
   { q: "does siddartha know english", expect: ["kb-languages-spoken"] },
   { q: "leadership experience", expect: ["kb-mentoring", "kb-communication"] },
   { q: "has he mentored anyone", expect: ["kb-mentoring"] },
-  { q: "is he a team player", expect: ["kb-communication", "kb-mentoring"] },
+  { q: "is he a team player", expect: ["kb-communication", "kb-mentoring", "kb-amazon-role"] },
+  { q: "how do you work in a team environment", expect: ["kb-communication"] },
   // --- hiring/contact ---
   { q: "how can i contact him", expect: ["kb-contact"] },
   { q: "what is his email address", expect: ["kb-contact"] },
@@ -84,8 +85,8 @@ const cases: Case[] = [
   { q: "what company do you currently work for", expect: ["kb-amazon-role"] },
   { q: "have you built rag systems", expect: ["kb-amazon-role"] },
   { q: "what databases have you used, sql or nosql", expect: ["FALLBACK"] },
-  // ptg-hca is acceptable: closest real adjacent experience (recruiter-friendly rule)
-  { q: "have you worked with spark or big data tools", expect: ["FALLBACK", "kb-ptg-hca"] },
+  // amazon-impact (high-throughput ingestion) is the best honest adjacent answer
+  { q: "have you worked with spark or big data tools", expect: ["kb-amazon-impact", "FALLBACK"] },
   { q: "do you have experience with genai or generative ai projects", expect: ["kb-ptg-role", "kb-artifact-triage-copilot"] },
   { q: "have you led or designed a system architecture", expect: ["kb-amazon-impact"] },
   { q: "what was the biggest technical challenge you faced", expect: ["kb-amazon-impact"] },

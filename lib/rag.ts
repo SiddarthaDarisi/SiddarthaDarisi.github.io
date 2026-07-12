@@ -50,7 +50,9 @@ export interface RagIndex {
 
 export function buildIndex(docs: RagDoc[]): RagIndex {
   const K1 = 1.4;
-  const B = 0.75;
+  // Low length-normalization: keyword-rich chunks (e.g. the Amazon role) should
+  // not be penalized for breadth, so they win the queries they're meant to answer.
+  const B = 0.35;
 
   const docTokens = docs.map((d) =>
     tokenize(`${d.boost ?? ""} ${d.boost ?? ""} ${d.body}`)
