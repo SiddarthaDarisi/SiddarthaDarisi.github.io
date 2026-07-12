@@ -18,16 +18,30 @@ export interface RagHit {
 const STOP = new Set([
   "the", "a", "an", "is", "are", "was", "were", "be", "to", "of", "and",
   "or", "in", "on", "at", "for", "with", "my", "our", "your", "it", "its",
-  "this", "that", "what", "how", "do", "does", "i", "we", "you", "me",
-  "can", "should", "am", "has", "have", "had", "will", "would", "about",
+  "this", "that", "what", "how", "do", "does", "did", "doing", "i", "we",
+  "you", "me", "can", "should", "am", "has", "have", "had", "will",
+  "would", "about", "he", "him", "his", "she", "her", "they", "them",
+  "whom", "why", "when", "where", "which", "know", "knows",
+  "tell", "give", "get", "there", "here", "been", "being", "from",
+  "into", "than", "then", "also", "just", "very", "any",
+  "use", "used", "using",
 ]);
+
+function stem(t: string): string {
+  // crude suffix stemming: working→work, architected→architect, projects→project
+  if (t.length >= 7 && t.endsWith("ing")) t = t.slice(0, -3);
+  else if (t.length >= 6 && t.endsWith("ed")) t = t.slice(0, -2);
+  if (t.length > 3 && t.endsWith("s") && !t.endsWith("ss")) t = t.slice(0, -1);
+  return t;
+}
 
 export function tokenize(text: string): string[] {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9+%.\-_/ ]/g, " ")
     .split(/\s+/)
-    .filter((t) => t.length > 1 && !STOP.has(t));
+    .filter((t) => t.length > 1 && !STOP.has(t))
+    .map(stem);
 }
 
 export interface RagIndex {

@@ -30,6 +30,13 @@ type Message =
 const HIRE_INTENT =
   /\b(hire|hiring|recruit|available|availability|open to work|opportunit|position|role|job|interview|salary|resume|cv|contact|reach|email|get in touch)\b/i;
 
+/** Rotated so repeated misses don't read as a scripted bot. */
+const FALLBACKS = [
+  "I don't have that specific detail on hand — but Siddartha's track record says a lot: he's gone from GenAI MLOps to building RAG ingestion at Amazon scale, picking up new stacks quickly along the way. He'd love to talk specifics directly.",
+  "That one's beyond what I've been given — it's worth asking Siddartha himself. He's quick to respond, and questions like this are exactly what the contact page is for.",
+  "Good question — I don't have it in my knowledge base, and I'd rather connect you with Siddartha than guess. He's happy to get into specifics one-on-one.",
+];
+
 export default function AskWidget() {
   const index = useMemo(
     () =>
@@ -52,6 +59,7 @@ export default function AskWidget() {
   ]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const fallbackIdx = useRef(0);
   const [showSettings, setShowSettings] = useState(false);
   const [keyDraft, setKeyDraft] = useState("");
   const [hasKey, setHasKey] = useState(false);
@@ -83,13 +91,11 @@ export default function AskWidget() {
     const CONFIDENCE = 2.2;
     const hits = index.search(q, 3).filter((h) => h.score >= CONFIDENCE);
     if (hits.length === 0) {
+      const text = FALLBACKS[fallbackIdx.current % FALLBACKS.length];
+      fallbackIdx.current += 1;
       setMessages((m) => [
         ...m,
-        {
-          kind: "bot",
-          text: "I don't have that specific detail on hand — but Siddartha's track record says a lot: he's gone from GenAI MLOps to building RAG ingestion at Amazon scale, picking up new stacks quickly along the way. He'd love to talk specifics directly.",
-          cta: "Contact Siddartha",
-        },
+        { kind: "bot", text, cta: "Contact Siddartha" },
       ]);
       return;
     }
