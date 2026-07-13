@@ -2,11 +2,12 @@
  * Code-drawn decorative thumbnails for artifact cards.
  * kind="timeline": mini era chart (bars + rising compute curve)
  * kind="chatbot": chat bubbles with a sparkle
+ * kind="report": ML table vs DL network split panel
  */
 export default function ArtifactThumb({
   kind,
 }: {
-  kind: "timeline" | "chatbot";
+  kind: "timeline" | "chatbot" | "report";
 }) {
   if (kind === "timeline") {
     return (
@@ -48,6 +49,45 @@ export default function ArtifactThumb({
         />
         <circle cx="192" cy="12" r="3.6" fill="var(--violet)" />
         <line x1="10" y1="96" x2="190" y2="96" stroke="var(--line)" strokeWidth="1.4" />
+      </svg>
+    );
+  }
+
+  if (kind === "report") {
+    return (
+      <svg aria-hidden viewBox="0 0 200 110" className="h-full w-full">
+        <defs>
+          <linearGradient id="rp-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--teal)" />
+            <stop offset="100%" stopColor="var(--violet)" />
+          </linearGradient>
+        </defs>
+        {/* left: classical ML — tidy feature table */}
+        {[22, 40, 58, 76].map((y, i) => (
+          <g key={y}>
+            <rect x="16" y={y} width="30" height="9" rx="2.5" fill="var(--teal)" opacity={0.75 - i * 0.12} />
+            <rect x="52" y={y} width="34" height="9" rx="2.5" fill="var(--raised)" stroke="var(--line)" />
+          </g>
+        ))}
+        {/* divider */}
+        <line x1="100" y1="14" x2="100" y2="96" stroke="url(#rp-grad)" strokeWidth="1.6" opacity="0.7" />
+        <text x="100" y="106" textAnchor="middle" fontSize="8" fill="var(--muted)" fontFamily="monospace">
+          vs
+        </text>
+        {/* right: deep learning — layered network */}
+        {[
+          [122, 28], [122, 55], [122, 82],
+          [152, 41], [152, 69],
+          [180, 55],
+        ].map(([x, y], i) => (
+          <circle key={i} cx={x} cy={y} r="5.5" fill={i > 2 ? "var(--violet)" : "var(--teal)"} opacity="0.85" />
+        ))}
+        {[
+          [122, 28, 152, 41], [122, 55, 152, 41], [122, 55, 152, 69],
+          [122, 82, 152, 69], [152, 41, 180, 55], [152, 69, 180, 55],
+        ].map(([x1, y1, x2, y2], i) => (
+          <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--line)" strokeWidth="1.4" />
+        ))}
       </svg>
     );
   }

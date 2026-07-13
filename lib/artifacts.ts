@@ -141,6 +141,56 @@ export const artifacts: Artifact[] = [
       minHeight: 700,
     },
   },
+  {
+    slug: "ml-vs-dl",
+    title: "Machine Learning vs. Deep Learning — A Decision Framework",
+    subtitle:
+      "Two real-world case studies where the \"wrong\" approach was actually tried and lost — and the one question that decides between them",
+    tags: ["Applied Research", "ML vs DL", "Case Studies", "Technical Writing"],
+    introduction:
+      "The usual answer to \"when should I use deep learning?\" is about data volume and compute cost — true, and almost never the real reason. This Workshop 2 report argues the distinction that actually decides the choice: whether the features that predict the outcome can be written down by a human in advance. It defends that principle with two production case studies where the losing approach wasn't dismissed on theory — it was genuinely attempted, and the evidence went the other way. Read the full report below.",
+    description:
+      "Case 1 — customer churn prediction (classical ML wins): on the canonical IBM/Kaggle Telco dataset (~7,000 subscribers), the features are already human-legible business facts — contract type, tenure, payment method — so there is no hierarchy left for a deep network to discover, and interpretability is a deployment requirement because retention teams must know why a customer is at risk. Frohböse (2020) benchmarked KNN, logistic regression, random forest, and SVM, then deliberately added a feed-forward neural network: it scored best (0.7996 accuracy, 0.5948 F1) but only marginally, at a heavy cost in interpretability and training complexity. Case 2 — diabetic retinopathy screening (deep learning wins): the predictive features (microaneurysms, haemorrhages, exudates) live in raw retinal pixels that no human can articulate as columns; hand-crafted classical approaches were attempted for roughly two decades before being conceded as theoretically incapable, and a CNN-based system, IDx-DR, became the first FDA-approved autonomous AI diagnostic in 2018. The report closes by generalizing the governing principle and its downstream consequences for data volume, interpretability, and cost.",
+    objective:
+      "To move past the folklore answer on ML vs. deep learning and build a defensible decision framework for the Workshop 2 assignment — one grounded in documented deployments and honest about counter-evidence, including the churn author's own caveat about larger datasets, rather than argued from first principles alone.",
+    process: [
+      "Framed the report around one governing question — can a domain expert enumerate the predictive features in advance? — and committed to testing it against real deployments, not toy examples.",
+      "Selected two case studies with an unusual property: in each, the losing approach was actually attempted on the same problem, so the comparison is evidence rather than assertion.",
+      "Analyzed the Telco churn literature — including Frohböse's 2020 benchmark where a neural network was explicitly added to a classical lineup and won only marginally — and connected the interpretability requirement to how retention teams actually consume model output.",
+      "Analyzed the diabetic retinopathy case: two decades of hand-crafted feature engineering, the theoretical reason it could not succeed, and the CNN-based IDx-DR system that earned autonomous FDA clearance in 2018.",
+      "Addressed the strongest counter-arguments honestly, including why more data does not rescue deep learning for churn (the interpretability requirement does not shrink as data grows).",
+      "Wrote and typeset the report, then published it here with the full PDF for scrutiny.",
+    ],
+    tools: [
+      "Literature analysis (published benchmarks, FDA announcements, deployment studies)",
+      "IBM/Kaggle Telco churn dataset context (~7,000 subscribers)",
+      "Classical ML methods analyzed: logistic regression, KNN, random forest, SVM",
+      "Deep learning methods analyzed: feed-forward networks, CNNs (IDx-DR)",
+      "Technical writing & argumentation",
+    ],
+    uniqueValue:
+      "Most ML-vs-DL comparisons list pros and cons; this one advances a single falsifiable principle and stress-tests it against two deployments where the opposite approach was really tried. It also demonstrates intellectual honesty — the report includes the churn author's own caveat that cuts against its thesis, then answers it — which is the skill that separates engineering judgment from advocacy.",
+    relevance:
+      "Choosing the wrong model family is one of the most expensive mistakes an AI team can make, and I make this call in practice on ingestion and ML systems at Amazon. For hiring managers this artifact shows I can reason about when NOT to use deep learning — a rarer and more valuable signal than knowing how to use it; for students and practitioners it is a reusable decision framework with citations to follow.",
+    references: [
+      {
+        label: "Full report (PDF) — Machine Learning vs. Deep Learning, Workshop 2",
+        url: "/ML_vs_DL_Report.pdf",
+      },
+      {
+        label: "Frohböse (2020), customer churn prediction benchmark on the IBM Telco dataset",
+      },
+      {
+        label: "IBM Telco Customer Churn dataset (Kaggle)",
+        url: "https://www.kaggle.com/datasets/blastchar/telco-customer-churn",
+      },
+      {
+        label: "FDA (2018), authorization of IDx-DR — first autonomous AI diagnostic for diabetic retinopathy",
+        url: "https://www.fda.gov/news-events/press-announcements/fda-permits-marketing-artificial-intelligence-based-device-detect-certain-diabetes-related-eye",
+      },
+    ],
+    externalUrl: "/ML_vs_DL_Report.pdf",
+  },
 ];
 
 export function getArtifact(slug: string): Artifact | undefined {

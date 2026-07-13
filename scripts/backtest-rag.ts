@@ -81,6 +81,9 @@ const cases: Case[] = [
   { q: "who is siddartha", expect: ["kb-value-proposition", "kb-summary-current-focus"] },
   { q: "tell me about yourself", expect: ["kb-value-proposition"] },
   { q: "what are his strengths", expect: ["kb-value-proposition", "kb-communication", "kb-skills-competencies"] },
+  // --- ml-vs-dl artifact ---
+  { q: "when should i use deep learning vs machine learning", expect: ["kb-artifact-ml-vs-dl"] },
+  { q: "tell me about the ml vs dl report", expect: ["kb-artifact-ml-vs-dl"] },
   // --- live QA findings (retrieval-mode robustness) ---
   { q: "what is his linkedin", expect: ["kb-contact"] },
   { q: "github link", expect: ["kb-contact"] },

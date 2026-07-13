@@ -78,6 +78,15 @@ const artifacts = [
     href: "/artifacts/triage-copilot",
     tags: ["AI Agent", "Responsible AI", "AWS Ops"],
   },
+  {
+    number: "03",
+    kind: "report" as const,
+    title: "Machine Learning vs. Deep Learning — A Decision Framework",
+    description:
+      "One question decides between them: can a human write the predictive features down in advance? Two case studies — telecom churn and diabetic retinopathy — where the losing approach was actually tried.",
+    href: "/artifacts/ml-vs-dl",
+    tags: ["Applied Research", "ML vs DL", "Case Studies"],
+  },
 ];
 
 export default function Home() {
