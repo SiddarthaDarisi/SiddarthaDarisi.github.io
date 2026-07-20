@@ -87,6 +87,15 @@ const artifacts = [
     href: "/artifacts/ml-vs-dl",
     tags: ["Applied Research", "ML vs DL", "Case Studies"],
   },
+  {
+    number: "04",
+    kind: "voice" as const,
+    title: "PrepPilot — AI Mock Interview Tutor",
+    description:
+      "A local-first AI interviewer that listens to how you speak, not just what you say — a full voice loop (VAD → Whisper STT → prosody analytics → LLM coaching → TTS) running on an 8GB laptop GPU. Demo video on its page.",
+    href: "/artifacts/preppilot",
+    tags: ["Full-Stack AI", "Speech ML", "Real-Time Systems"],
+  },
 ];
 
 export default function Home() {

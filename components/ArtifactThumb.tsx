@@ -7,8 +7,40 @@
 export default function ArtifactThumb({
   kind,
 }: {
-  kind: "timeline" | "chatbot" | "report";
+  kind: "timeline" | "chatbot" | "report" | "voice";
 }) {
+  if (kind === "voice") {
+    return (
+      <svg aria-hidden viewBox="0 0 200 110" className="h-full w-full">
+        <defs>
+          <linearGradient id="vc-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="var(--teal)" />
+            <stop offset="100%" stopColor="var(--violet)" />
+          </linearGradient>
+        </defs>
+        {/* waveform */}
+        {[
+          6, 14, 9, 22, 30, 18, 34, 44, 26, 38, 52, 34, 20, 12, 28, 40, 24, 14, 8,
+        ].map((h, i) => (
+          <rect
+            key={i}
+            x={10 + i * 10}
+            y={55 - h / 2}
+            width="5"
+            height={h}
+            rx="2.5"
+            fill="url(#vc-grad)"
+            opacity={0.55 + (h / 60) * 0.4}
+          />
+        ))}
+        {/* mic body */}
+        <rect x="86" y="66" width="28" height="20" rx="10" fill="var(--raised)" stroke="var(--line)" />
+        <line x1="100" y1="86" x2="100" y2="96" stroke="var(--line)" strokeWidth="2" />
+        <line x1="88" y1="96" x2="112" y2="96" stroke="var(--line)" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
   if (kind === "timeline") {
     return (
       <svg aria-hidden viewBox="0 0 200 110" className="h-full w-full">

@@ -191,6 +191,75 @@ export const artifacts: Artifact[] = [
     ],
     externalUrl: "/ML_vs_DL_Report.pdf",
   },
+  {
+    slug: "preppilot",
+    title: "PrepPilot — AI Mock Interview Tutor",
+    subtitle:
+      "A local-first AI interviewer that listens to how you speak, not just what you say — a full voice loop (STT → coaching LLM → prosody analytics → TTS) on an 8GB laptop GPU",
+    tags: ["Full-Stack AI", "Speech & Audio ML", "Local-First LLM", "Real-Time Systems"],
+    introduction:
+      "PrepPilot runs a realistic spoken mock interview and coaches the candidate on both what they say and how they say it. Unlike a chatbot, it listens to delivery — pace, pauses, filler words, pitch variance, vocal energy — and returns structured 1–10 rubric feedback with concrete rewrites, entirely offline on a laptop GPU. The demo video below shows the full voice loop; the complete source and system design are on GitHub.",
+    description:
+      "A candidate picks a role, seniority, and optionally pastes a job description. An AI interviewer asks one question at a time over a WebSocket voice loop: Silero VAD detects the end of an answer, faster-whisper large-v3 transcribes it with word-level timestamps, a prosody/filler analytics layer computes interpretable delivery metrics (WPM, pause ratio, filler rate, documented confidence and expressiveness composites — deliberately not black-box emotion labels), and an LLM scores the answer on a five-part rubric (content, structure/STAR, specificity, technical accuracy, delivery), choosing between a targeted follow-up and the next question. A Kokoro TTS voice asks it aloud. Sessions persist to SQLite, feeding a printable report and a cross-session trends dashboard. The LLM is swappable — local Ollama (qwen3) by default, Claude or GPT with one config line — and every heavy dependency degrades gracefully: the full text-mode loop works with zero ML packages installed.",
+    objective:
+      "To demonstrate the ability to design and ship a complete, production-shaped AI system — not a notebook or a single prompt — that integrates real-time audio, multiple ML models, and an LLM under a hard resource budget (8GB VRAM), while making deliberate engineering trade-offs around reliability, privacy, and cost.",
+    process: [
+      "Designed the contract first: shared Pydantic schemas and a documented WebSocket protocol between the FastAPI backend and the TypeScript frontend, so every later feature had a stable spine.",
+      "Built an async turn state machine (orchestrator) that is transport- and provider-agnostic — the live voice WebSocket path and the REST endpoints drive the same logic, and interviews survive a server restart mid-session.",
+      "Assembled the audio pipeline: Silero VAD end-of-turn detection (with an energy fallback and a manual flush so a quiet mic never silently drops an answer) → faster-whisper transcription with word timestamps → parselmouth/librosa prosody analysis → Kokoro TTS reply.",
+      "Made the LLM swappable behind a provider abstraction (Ollama, Anthropic, OpenAI, and a canned offline provider) with automatic fallback; all model output is parsed as strict JSON with a retry-on-validation-failure loop.",
+      "Engineered the 8GB VRAM budget explicitly: two model-residency strategies (a 4B LLM co-resident with Whisper, or an 8B LLM loaded on demand between turns) documented and configurable.",
+      "Enforced graceful degradation as a hard rule — every heavy dependency imports lazily, a health endpoint reports machine-readable degradation flags, and the UI surfaces them honestly instead of failing silently.",
+      "Verified with 58 GPU-free unit tests plus end-to-end voice testing on the target hardware, then published the source, a system-design document, and the recorded demo.",
+    ],
+    tools: [
+      "Python · FastAPI · WebSockets",
+      "faster-whisper large-v3 (STT)",
+      "Silero VAD",
+      "Kokoro-82M TTS",
+      "parselmouth + librosa (prosody analytics)",
+      "Ollama (qwen3) · Claude · GPT (swappable providers)",
+      "SQLite · SQLAlchemy 2.0",
+      "Next.js 14 · TypeScript (static export)",
+      "Docker · pytest · CUDA (RTX 3070, 8GB)",
+    ],
+    uniqueValue:
+      "Most AI interview tools grade the transcript. PrepPilot treats delivery as a first-class signal using interpretable, documented metrics rather than black-box emotion labels — and it does this local-first, so the candidate's voice never leaves their machine. Fitting real-time STT, an 8B-parameter LLM, and TTS inside an 8GB VRAM budget, with graceful CPU-only degradation and reconnectable sessions, is the core engineering achievement: it is systems design, not prompt-writing.",
+    relevance:
+      "Interviewing under pressure is a near-universal professional bottleneck, and delivery is where strong candidates most often lose points — PrepPilot gives job seekers a private, unlimited, judgment-free way to rehearse. For hiring managers, it is end-to-end evidence of the skills an AI/ML engineer is actually hired for: real-time inference, model orchestration, resource budgeting, provider abstraction, and reliable UX under failure.",
+    references: [
+      {
+        label: "Source code — github.com/SiddarthaDarisi/preppilot",
+        url: "https://github.com/SiddarthaDarisi/preppilot",
+      },
+      {
+        label: "System design document (architecture, data flow, design decisions)",
+        url: "https://github.com/SiddarthaDarisi/preppilot/blob/main/docs/ARCHITECTURE.md",
+      },
+      {
+        label: "faster-whisper (CTranslate2 Whisper inference)",
+        url: "https://github.com/SYSTRAN/faster-whisper",
+      },
+      {
+        label: "Silero VAD",
+        url: "https://github.com/snakers4/silero-vad",
+      },
+      {
+        label: "Kokoro-82M text-to-speech",
+        url: "https://huggingface.co/hexgrad/Kokoro-82M",
+      },
+      {
+        label: "Praat/parselmouth & librosa (prosody analysis)",
+        url: "https://parselmouth.readthedocs.io",
+      },
+    ],
+    embed: {
+      src: "https://www.youtube.com/embed/2rCSeOZxo-A",
+      title: "PrepPilot — full voice-loop demo",
+      minHeight: 480,
+    },
+    externalUrl: "https://github.com/SiddarthaDarisi/preppilot",
+  },
 ];
 
 export function getArtifact(slug: string): Artifact | undefined {
