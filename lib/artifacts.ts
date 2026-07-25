@@ -29,6 +29,67 @@ export interface Artifact {
 
 export const artifacts: Artifact[] = [
   {
+    slug: "haven-therapy-companion",
+    title: "Haven — Anatomy of a Listening Machine",
+    subtitle:
+      "A fully local AI therapy companion: QLoRA fine-tuned Llama, a trained emotion classifier, retrieval-grounded answers, and local voice — every step of the ML lifecycle on an 8 GB laptop GPU",
+    tags: ["LLM Fine-Tuning", "QLoRA", "Applied ML", "Responsible AI", "Full-Stack"],
+    introduction:
+      "Haven is a private mental-wellness companion whose every model runs on my own machine: a Llama fine-tuned with QLoRA on 10,752 real emotional-support conversations, a DistilRoBERTa classifier scoring 28 emotions per message, retrieval over 36 public-domain clinical publications (NIMH, VA, NIH), and fully local speech-to-text and neural text-to-speech. The embedded artifact below documents all ten steps of the machine-learning lifecycle with the real numbers the pipeline produced — including a live demo video of the app in a hands-free voice conversation.",
+    description:
+      "The build walks the complete ML lifecycle and is honest about where it broke: four datasets cleaned and deduplicated (42% of the counseling corpus were exact duplicates — removed before splitting to prevent leakage); EDA whose class-imbalance findings dictated the metrics; feature engineering with assistant-only loss masking, conversation windowing, and sequence packing; baseline-first model selection; QLoRA training on an RTX 3070 that required writing a chunked cross-entropy trainer to stop the 128k-vocabulary logits from overflowing 8 GB of VRAM; and a three-part evaluation that caught the fine-tune regressing on crisis safety — repaired with targeted safety-patch training and a defense-in-depth server layer that makes application-level safety independent of model behavior. Headline results: validation perplexity 32.6 → 9.79; classifier beats its TF-IDF baseline on micro- and macro-F1; the patched model beats base on crisis handling (75% vs 62.5%) and the application passes the full 18-prompt safety suite by construction.",
+    objective:
+      "Demonstrate command of every stage of the machine-learning lifecycle learned in the AI/ML program — data, cleaning, EDA, features, model selection, training, evaluation, deployment, and ethics — in one coherent, working system, on consumer hardware, in the highest-stakes domain for getting AI behavior right.",
+    process: [
+      "Framed the problem and fixed success criteria before touching data (beat base-model perplexity, beat a TF-IDF baseline on macro-F1, pass a crisis-safety suite with zero control regressions).",
+      "Collected four corpora (EmpatheticDialogues, strategy-annotated ESConv, therapist-written CounselChat, a hand-written safety set) plus GoEmotions for the classifier; cleaned, deduplicated before splitting, and built seeded reproducible splits.",
+      "Ran EDA: emotion and support-strategy distributions, class imbalance (neutral 14,219 : grief 77), and length statistics that dictated metrics and context windows.",
+      "Engineered features: assistant-only loss masks, conversation windowing, greedy packing into fixed token blocks, 28-dim multi-hot emotion targets.",
+      "Trained and threshold-tuned a DistilRoBERTa emotion classifier against a TF-IDF baseline.",
+      "Fine-tuned Llama 3.2 3B with QLoRA (4-bit NF4, LoRA r=16), writing a chunked cross-entropy trainer to fit 8 GB VRAM; an 8B run continues as the background quality ceiling.",
+      "Evaluated with deterministic decoding: perplexity vs base, side-by-side generations, and an 18-prompt crisis/control/boundary suite — then repaired discovered safety drift with targeted patch training.",
+      "Deployed as a local app: hands-free voice with live waveform glow, emotion chips, RAG citations, mood tracking with an unlock gate, session memory, and hard server-side safety guarantees.",
+    ],
+    tools: [
+      "PyTorch",
+      "Hugging Face Transformers / PEFT / Datasets",
+      "bitsandbytes (4-bit NF4 QLoRA)",
+      "scikit-learn",
+      "sentence-transformers (MiniLM RAG)",
+      "faster-whisper + Kokoro (local voice)",
+      "FastAPI · SQLite",
+      "Next.js 14 · TypeScript · Tailwind CSS",
+    ],
+    uniqueValue:
+      "Most portfolio chatbots are a system prompt on someone else's API. Haven is trained: the empathy is learned from data, the emotion perception is a model I trained and threshold-tuned, and the safety behavior is trained, adversarially evaluated, honestly reported where it failed, and guaranteed at the system level. The full receipts — technical report, model card, loss curves, and evaluation files — ship with the project.",
+    relevance:
+      "For AI/ML hiring managers it demonstrates end-to-end applied machine learning — dataset engineering, fine-tuning under hard memory constraints, honest evaluation, and responsible-AI system design — not just API integration. The failure-and-fix stories (duplicate leakage, threshold-driven macro-F1, VRAM thrash → chunked loss, safety drift → patch + guarantees) show engineering judgment under real constraints.",
+    references: [
+      {
+        label: "Technical Report & System Design (PDF) — architecture, build journey, and how each model was trained",
+        url: "/Haven_Technical_Report.pdf",
+      },
+      {
+        label: "Model Card (PDF) — data, metrics, failure modes, ethical considerations",
+        url: "/Haven_Model_Card.pdf",
+      },
+      {
+        label: "Source code — full pipeline, app, and safety system",
+        url: "https://github.com/SiddarthaDarisi/haven-companion",
+      },
+      { label: 'Dettmers et al. (2023), "QLoRA: Efficient Finetuning of Quantized LLMs"' },
+      { label: 'Liu et al. (2021), "Towards Emotional Support Dialog Systems" — ESConv' },
+      { label: 'Rashkin et al. (2019), "Towards Empathetic Open-domain Conversation Models"' },
+      { label: 'Demszky et al. (2020), "GoEmotions: A Dataset of Fine-Grained Emotions"' },
+    ],
+    embed: {
+      src: "https://siddarthadarisi.github.io/haven-ml-pipeline/",
+      title: "Haven — interactive ML build log with demo video",
+      minHeight: 720,
+    },
+    externalUrl: "https://siddarthadarisi.github.io/haven-ml-pipeline/",
+  },
+  {
     slug: "ai-ml-timeline",
     title: "The Climate of Machine Intelligence",
     subtitle:
