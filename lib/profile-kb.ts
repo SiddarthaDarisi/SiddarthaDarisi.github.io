@@ -570,7 +570,7 @@ export const profileKB: KBChunk[] = [
   {
     id: "kb-portfolio-build",
     topic: "How this portfolio was built",
-    text: "This portfolio is built with Next.js 16 and Tailwind CSS v4, statically exported and deployed on GitHub Pages, with a custom hand-built design system. The \"Ask Siddartha\" chatbot itself is a client-side RAG system running entirely in the browser, retrieving from this knowledge base with no external chatbot service required.",
+    text: "This portfolio is built with Next.js 16 and Tailwind CSS v4, statically exported and deployed on GitHub Pages, with a custom hand-built design system. The \"Ask Siddartha\" chatbot is a RAG system whose retrieval (BM25 over this knowledge base) runs entirely in the browser; answers are composed by Google's Gemini via a small Cloudflare Worker proxy that keeps the API key server-side, with a retrieval-only fallback when the proxy is unavailable.",
     keywords: [
       "portfolio",
       "how was this built",

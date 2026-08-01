@@ -13,4 +13,6 @@ export const site = {
     "Building the ingestion pipelines, MLOps automation, and RAG infrastructure that make AI reliable at enterprise scale.",
   valueProposition:
     "As a software engineer specializing in cloud architecture and AI/ML systems, I help organizations turn raw enterprise data into intelligent, production-grade products. From high-throughput ingestion pipelines processing 10k+ documents a day to GenAI-driven MLOps that cut release cycles by 35%, I build the infrastructure that makes AI dependable at scale — and I share what I learn by mentoring engineers and publishing hands-on resources like the ones in this portfolio.",
+  audience:
+    "Written for AI/ML hiring managers and technical recruiters evaluating my work, engineering collaborators and mentees, and fellow AI/ML practitioners and learners.",
 };

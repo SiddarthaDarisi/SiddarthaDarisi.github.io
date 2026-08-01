@@ -225,6 +225,9 @@ export default function Home() {
               <p className="font-display relative mt-5 text-xl font-medium leading-snug tracking-tight md:text-2xl">
                 {site.valueProposition}
               </p>
+              <p className="relative mt-5 border-t border-line pt-4 font-mono text-xs tracking-wider text-muted">
+                // Target audience · {site.audience}
+              </p>
             </div>
           </section>
 
