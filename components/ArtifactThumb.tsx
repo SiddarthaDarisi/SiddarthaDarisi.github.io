@@ -1,14 +1,50 @@
+import type { ArtifactThumbKind } from "@/lib/artifacts";
+
 /**
  * Code-drawn decorative thumbnails for artifact cards.
+ * kind="model": descending training-loss curve + LoRA adapter motif
  * kind="timeline": mini era chart (bars + rising compute curve)
  * kind="chatbot": chat bubbles with a sparkle
  * kind="report": ML table vs DL network split panel
+ * kind="voice": waveform + microphone
  */
-export default function ArtifactThumb({
-  kind,
-}: {
-  kind: "timeline" | "chatbot" | "report" | "voice";
-}) {
+export default function ArtifactThumb({ kind }: { kind: ArtifactThumbKind }) {
+  if (kind === "model") {
+    return (
+      <svg aria-hidden viewBox="0 0 200 110" className="h-full w-full">
+        <defs>
+          <linearGradient id="md-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="var(--teal)" />
+            <stop offset="100%" stopColor="var(--violet)" />
+          </linearGradient>
+        </defs>
+        {/* axes */}
+        <line x1="14" y1="12" x2="14" y2="92" stroke="var(--line)" strokeWidth="1.4" />
+        <line x1="14" y1="92" x2="128" y2="92" stroke="var(--line)" strokeWidth="1.4" />
+        {/* descending training-loss curve */}
+        <path
+          d="M16 20 C 34 24, 42 46, 58 60 S 96 82, 126 85"
+          fill="none"
+          stroke="url(#md-grad)"
+          strokeWidth="2.4"
+          strokeLinecap="round"
+        />
+        <circle cx="126" cy="85" r="3.6" fill="var(--teal)" />
+        {/* frozen base weights (block) + LoRA adapter (small ranks) */}
+        <rect x="144" y="18" width="42" height="42" rx="8" fill="var(--raised)" stroke="var(--line)" />
+        <circle cx="157" cy="31" r="3" fill="var(--muted)" opacity="0.55" />
+        <circle cx="173" cy="31" r="3" fill="var(--muted)" opacity="0.55" />
+        <circle cx="157" cy="47" r="3" fill="var(--muted)" opacity="0.55" />
+        <circle cx="173" cy="47" r="3" fill="var(--muted)" opacity="0.55" />
+        {/* adapter rails */}
+        <rect x="144" y="70" width="18" height="20" rx="5" fill="url(#md-grad)" opacity="0.9" />
+        <rect x="168" y="70" width="18" height="20" rx="5" fill="url(#md-grad)" opacity="0.55" />
+        <line x1="165" y1="60" x2="153" y2="70" stroke="var(--line)" strokeWidth="1.4" />
+        <line x1="165" y1="60" x2="177" y2="70" stroke="var(--line)" strokeWidth="1.4" />
+      </svg>
+    );
+  }
+
   if (kind === "voice") {
     return (
       <svg aria-hidden viewBox="0 0 200 110" className="h-full w-full">

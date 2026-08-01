@@ -9,11 +9,23 @@ export interface ArtifactEmbed {
   minHeight: number;
 }
 
+/** Which code-drawn thumbnail (components/ArtifactThumb) a home card shows. */
+export type ArtifactThumbKind =
+  | "model"
+  | "timeline"
+  | "chatbot"
+  | "report"
+  | "voice";
+
 export interface Artifact {
   slug: string;
   title: string;
   subtitle: string;
   tags: string[];
+  /** Short copy for the home-page card; falls back to subtitle. */
+  homeBlurb?: string;
+  /** Thumbnail for the home-page card. */
+  thumb?: ArtifactThumbKind;
   introduction: string;
   description: string;
   objective: string;
@@ -34,6 +46,9 @@ export const artifacts: Artifact[] = [
     subtitle:
       "A fully local AI therapy companion: QLoRA fine-tuned Llama, a trained emotion classifier, retrieval-grounded answers, and local voice — every step of the ML lifecycle on an 8 GB laptop GPU",
     tags: ["LLM Fine-Tuning", "QLoRA", "Applied ML", "Responsible AI", "Full-Stack"],
+    homeBlurb:
+      "A fully local AI therapy companion — QLoRA fine-tuned Llama, a trained 28-emotion classifier, retrieval-grounded answers, and hands-free voice — every step of the ML lifecycle on an 8 GB laptop GPU. Interactive build log with demo video on its page.",
+    thumb: "model",
     introduction:
       "Haven is a private mental-wellness companion whose every model runs on my own machine: a Llama fine-tuned with QLoRA on 10,752 real emotional-support conversations, a DistilRoBERTa classifier scoring 28 emotions per message, retrieval over 36 public-domain clinical publications (NIMH, VA, NIH), and fully local speech-to-text and neural text-to-speech. The embedded artifact below documents all ten steps of the machine-learning lifecycle with the real numbers the pipeline produced — including a live demo video of the app in a hands-free voice conversation.",
     description:
@@ -95,10 +110,13 @@ export const artifacts: Artifact[] = [
     subtitle:
       "An interactive timeline of AI history (1943–2025), framed as booms, winters, and thaws",
     tags: ["AI/ML Research", "Data Visualization", "TypeScript", "GitHub Pages"],
+    homeBlurb:
+      "Interactive AI/ML history timeline (1943–2025) charting booms, winters, and thaws — 40 milestones, era barometer, and a log-scale training-compute visualization.",
+    thumb: "timeline",
     introduction:
       "An interactive, publicly hosted web timeline that tells the story of artificial intelligence from 1943 to 2025 through a weather metaphor — booms, winters, and thaws — arguing that AI winters were driven by hardware and funding constraints rather than failures of the underlying theory.",
     description:
-      'The timeline presents 40 curated milestones across six eras — Foundations (1943–1955), the Golden Years (1956–1973), AI Winters I & II (1974–1987), Quiet Progress (1993–2011), the Deep Learning Boom (2012–2019), and the Generative Era (2020–2025). Milestones are categorized (Theory, Hardware, Industry, Model Release, AI Winter) and filterable by theme; a clickable "barometer" lets visitors jump between eras; and a log-scale training-compute visualization shows how compute flatlined during the winters and exploded afterward, reinforcing the central thesis.',
+      'The timeline presents 40 curated milestones across eight eras — from Foundations (1943–1955) and the Golden Years (1956–1973), through the First AI Winter, the Expert-Systems boom, and the Second AI Winter (1974–1993), to Quiet Progress (1993–2011), the Deep Learning Boom (2012–2019), and the Generative Era (2020–2025). Milestones are categorized (Theory, Hardware, Industry, Model Release, AI Winter) and filterable by theme; a clickable "barometer" lets visitors jump between eras; and a log-scale training-compute visualization shows how compute flatlined during the winters and exploded afterward, reinforcing the central thesis.',
     objective:
       "Created for the AI & ML Timelines activity in the IWU AI/ML program, with two goals: (1) demonstrate the ability to research, synthesize, and communicate seven decades of AI history for a technical-professional audience, and (2) publish it as a genuinely useful, interactive reference rather than a static document.",
     process: [
@@ -155,6 +173,9 @@ export const artifacts: Artifact[] = [
     subtitle:
       "An AI agent that advises but never executes — built for a sleep-deprived engineer at 3am, and designed around what it refuses to do",
     tags: ["AI Agent", "Responsible AI", "AWS Operations", "Knowledge Grounding"],
+    homeBlurb:
+      "An AI agent that advises but never executes — it questions its way to a hypothesis for a failed AWS pipeline and refuses to guess. Built for a 3am page. Live demo on its page.",
+    thumb: "chatbot",
     introduction:
       "Triage Copilot is a Socratic triage guide for a failed AWS data pipeline: it asks one question at a time, sequences an on-call engineer toward a testable hypothesis, and states a confidence level and a falsification condition for every conclusion. It never runs a command and never declares an incident resolved. It's embedded live below — ask it about a Redshift or Lambda failure and see it work the way it was designed to.",
     description:
@@ -208,6 +229,9 @@ export const artifacts: Artifact[] = [
     subtitle:
       "Two real-world case studies where the \"wrong\" approach was actually tried and lost — and the one question that decides between them",
     tags: ["Applied Research", "ML vs DL", "Case Studies", "Technical Writing"],
+    homeBlurb:
+      "One question decides between them: can a human write the predictive features down in advance? Two case studies — telecom churn and diabetic retinopathy — where the losing approach was actually tried.",
+    thumb: "report",
     introduction:
       "The usual answer to \"when should I use deep learning?\" is about data volume and compute cost — true, and almost never the real reason. This Workshop 2 report argues the distinction that actually decides the choice: whether the features that predict the outcome can be written down by a human in advance. It defends that principle with two production case studies where the losing approach wasn't dismissed on theory — it was genuinely attempted, and the evidence went the other way. Read the full report below.",
     description:
@@ -258,6 +282,9 @@ export const artifacts: Artifact[] = [
     subtitle:
       "A local-first AI interviewer that listens to how you speak, not just what you say — a full voice loop (STT → coaching LLM → prosody analytics → TTS) on an 8GB laptop GPU",
     tags: ["Full-Stack AI", "Speech & Audio ML", "Local-First LLM", "Real-Time Systems"],
+    homeBlurb:
+      "A local-first AI interviewer that listens to how you speak, not just what you say — a full voice loop (VAD → Whisper STT → prosody analytics → LLM coaching → TTS) running on an 8GB laptop GPU. Demo video on its page.",
+    thumb: "voice",
     introduction:
       "PrepPilot runs a realistic spoken mock interview and coaches the candidate on both what they say and how they say it. Unlike a chatbot, it listens to delivery — pace, pauses, filler words, pitch variance, vocal energy — and returns structured 1–10 rubric feedback with concrete rewrites, entirely offline on a laptop GPU. The demo video below shows the full voice loop; the complete source and system design are on GitHub.",
     description:
@@ -281,7 +308,7 @@ export const artifacts: Artifact[] = [
       "parselmouth + librosa (prosody analytics)",
       "Ollama (qwen3) · Claude · GPT (swappable providers)",
       "SQLite · SQLAlchemy 2.0",
-      "Next.js 14 · TypeScript (static export)",
+      "Next.js 16 · TypeScript (static export)",
       "Docker · pytest · CUDA (RTX 3070, 8GB)",
     ],
     uniqueValue:

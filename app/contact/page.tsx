@@ -22,7 +22,7 @@ const channels = [
   },
   {
     label: "LinkedIn",
-    value: "linkedin.com/in/siddartha-darisi ↗",
+    value: "linkedin.com/in/siddartha-d ↗",
     href: site.linkedin,
     icon: IconLinkedIn,
     external: true,

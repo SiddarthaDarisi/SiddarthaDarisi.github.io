@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { artifacts } from "@/lib/artifacts";
 import NeuralHero from "@/components/NeuralHero";
 import Counter from "@/components/Counter";
 import SectionSpy from "@/components/SectionSpy";
@@ -56,45 +57,6 @@ const experiencePreview = [
     summary:
       "GenAI-driven MLOps turning natural-language prompts into validated IaC (35% faster releases); AI document pipeline for HCA Healthcare cutting manual entry 80%+.",
     tags: ["GenAI", "IaC", "MLOps", "Healthcare AI"],
-  },
-];
-
-const artifacts = [
-  {
-    number: "01",
-    kind: "timeline" as const,
-    title: "The Climate of Machine Intelligence",
-    description:
-      "Interactive AI/ML history timeline (1943–2025) charting booms, winters, and thaws — 40 milestones, era barometer, and a log-scale training-compute visualization.",
-    href: "/artifacts/ai-ml-timeline",
-    tags: ["Research", "Data Viz", "TypeScript"],
-  },
-  {
-    number: "02",
-    kind: "chatbot" as const,
-    title: "Triage Copilot — On-Call AI Assistant",
-    description:
-      "An AI agent that advises but never executes — it questions its way to a hypothesis for a failed AWS pipeline and refuses to guess. Built for a 3am page. Live demo on its page.",
-    href: "/artifacts/triage-copilot",
-    tags: ["AI Agent", "Responsible AI", "AWS Ops"],
-  },
-  {
-    number: "03",
-    kind: "report" as const,
-    title: "Machine Learning vs. Deep Learning — A Decision Framework",
-    description:
-      "One question decides between them: can a human write the predictive features down in advance? Two case studies — telecom churn and diabetic retinopathy — where the losing approach was actually tried.",
-    href: "/artifacts/ml-vs-dl",
-    tags: ["Applied Research", "ML vs DL", "Case Studies"],
-  },
-  {
-    number: "04",
-    kind: "voice" as const,
-    title: "PrepPilot — AI Mock Interview Tutor",
-    description:
-      "A local-first AI interviewer that listens to how you speak, not just what you say — a full voice loop (VAD → Whisper STT → prosody analytics → LLM coaching → TTS) running on an 8GB laptop GPU. Demo video on its page.",
-    href: "/artifacts/preppilot",
-    tags: ["Full-Stack AI", "Speech ML", "Real-Time Systems"],
   },
 ];
 
@@ -321,28 +283,28 @@ export default function Home() {
               </Link>
             </div>
             <div className="dim-list mt-6 space-y-5">
-              {artifacts.map((artifact) => (
+              {artifacts.map((artifact, index) => (
                 <Link
-                  key={artifact.href}
-                  href={artifact.href}
+                  key={artifact.slug}
+                  href={`/artifacts/${artifact.slug}`}
                   data-reveal
                   className="card card-lift group grid gap-5 p-6 sm:grid-cols-[150px_1fr]"
                 >
                   <div className="h-[92px] overflow-hidden rounded-xl border border-line bg-raised p-2">
-                    <ArtifactThumb kind={artifact.kind} />
+                    <ArtifactThumb kind={artifact.thumb ?? "report"} />
                   </div>
                   <div className="flex flex-col">
                     <span className="font-mono text-xs text-accent">
-                      {artifact.number}
+                      {String(index + 1).padStart(2, "0")}
                     </span>
                     <h3 className="font-display mt-1 text-xl font-semibold tracking-tight transition-colors group-hover:text-accent">
                       {artifact.title}
                     </h3>
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
-                      {artifact.description}
+                      {artifact.homeBlurb ?? artifact.subtitle}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
-                      {artifact.tags.map((tag) => (
+                      {artifact.tags.slice(0, 3).map((tag) => (
                         <span key={tag} className="chip">
                           {tag}
                         </span>
